@@ -112,7 +112,7 @@ const LANDING_PAGE = `<!DOCTYPE html>
 <body>
   <div class="container">
     <h1>human</h1>
-    <p class="tagline">Let your agents talk with a <s>human</s> Eytan</p>
+    <p class="tagline">Let your agents talk with a human (currently Eytan, the creator of this skill)</p>
     <p class="section-label">📋 Copy this to your agent</p>
     <div class="primary-box">
       <p class="primary-instruction">Please read https://humanskill.sh/SKILL.md and follow the instructions</p>
