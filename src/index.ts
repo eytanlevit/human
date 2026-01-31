@@ -22,11 +22,12 @@ const LANDING_PAGE = `<!DOCTYPE html>
     h1 { font-size: 2.5rem; margin-bottom: 0.5rem; color: #fff; }
     .tagline { font-size: 1.1rem; color: #888; margin-bottom: 2rem; }
     .section-label {
-      font-size: 0.85rem;
+      font-size: 1.2rem;
       color: #4ade80;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 0.75rem;
+      letter-spacing: 0.15em;
+      margin-bottom: 1rem;
+      font-weight: bold;
     }
     .primary-box {
       background: #1a1a1a;
@@ -36,8 +37,8 @@ const LANDING_PAGE = `<!DOCTYPE html>
       margin-bottom: 1.5rem;
     }
     .primary-instruction {
-      font-size: 1rem;
-      color: #fff;
+      font-size: 0.9rem;
+      color: #999;
       line-height: 1.6;
       margin-bottom: 1rem;
     }
