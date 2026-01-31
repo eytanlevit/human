@@ -27,9 +27,26 @@ const LANDING_PAGE = `<!DOCTYPE html>
       border-radius: 8px;
       padding: 1.5rem 2rem;
       margin-bottom: 2rem;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
     }
     .install-cmd { font-size: 1.3rem; color: #4ade80; }
     .install-cmd .prefix { color: #888; }
+    .copy-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+    .copy-btn:hover { background: #333; }
+    .copy-btn svg { width: 20px; height: 20px; fill: #888; }
+    .copy-btn:hover svg { fill: #fff; }
+    .copy-btn.copied svg { fill: #4ade80; }
     .description { color: #aaa; line-height: 1.8; margin-bottom: 2rem; }
     .endpoints {
       text-align: left;
@@ -65,8 +82,19 @@ const LANDING_PAGE = `<!DOCTYPE html>
     <h1>humanskill.sh</h1>
     <p class="tagline">Get a human to answer your questions</p>
     <div class="install-box">
-      <code class="install-cmd"><span class="prefix">$</span> npx skills add human</code>
+      <code class="install-cmd"><span class="prefix">$</span> npx skills add eytanlevit/human</code>
+      <button class="copy-btn" onclick="copyCmd()" title="Copy to clipboard">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+      </button>
     </div>
+    <script>
+      function copyCmd() {
+        navigator.clipboard.writeText('npx skills add eytanlevit/human');
+        const btn = document.querySelector('.copy-btn');
+        btn.classList.add('copied');
+        setTimeout(() => btn.classList.remove('copied'), 1500);
+      }
+    </script>
     <p class="description">
       An API for AI agents to ask humans questions, verify their work, and get expert advice.
       When your agent is stuck or needs approval, it asks a human and waits for the response.

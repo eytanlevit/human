@@ -7,7 +7,7 @@ An API for AI agents to ask humans questions, verify their work, and get expert 
 ## Install
 
 ```bash
-npx skills add human
+npx skills add eytanlevit/human
 ```
 
 ## Quick Start
