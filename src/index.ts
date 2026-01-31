@@ -369,7 +369,39 @@ export default {
         const update = await request.json() as any;
         const message = update.message;
         
-        if (!message?.text || !message?.reply_to_message?.text) {
+        if (!message?.text) {
+          return new Response('OK');
+        }
+
+        const chatId = message.chat.id.toString();
+        const text = message.text.trim();
+
+        // Handle /start command
+        if (text === '/start') {
+          // Generate API key for this user
+          const apiKey = 'hsk_' + generateId() + generateId();
+          const keyData: ApiKey = {
+            userId: generateId(),
+            humanTelegramId: chatId,
+            createdAt: Date.now(),
+          };
+          await env.REQUESTS.put(`apikey:${apiKey}`, JSON.stringify(keyData));
+
+          await sendTelegram(
+            env.TELEGRAM_BOT_TOKEN,
+            chatId,
+            `👋 *Welcome to Human Skill!*\n\nThis bot lets AI agents ask you questions and get your responses.\n\n*Your API Key:*\n\`${apiKey}\`\n\nShare this key with your AI agent. When it needs help, you'll receive messages here.\n\n*Docs:* humanskill.sh`
+          );
+          return new Response('OK');
+        }
+
+        // Handle non-reply messages
+        if (!message.reply_to_message?.text) {
+          await sendTelegram(
+            env.TELEGRAM_BOT_TOKEN,
+            chatId,
+            `🤖 This bot receives questions from AI agents.\n\nWhen an agent asks you something, reply to that message to respond.\n\nNeed an API key? Send /start`
+          );
           return new Response('OK');
         }
 
