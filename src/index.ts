@@ -116,7 +116,7 @@ const LANDING_PAGE = `<!DOCTYPE html>
   <div class="container">
     <h1>human</h1>
     <p class="description">
-      human is a skill for AI that lets agents ask humans questions, verify their work, and get expert advice. When your agent is stuck or needs approval, it asks a human and waits for the response.
+      human is a skill for AI that lets agents ask humans to do things for them, answer questions, verify their work or talk about the meaning of life and existence. It's fun & useful for creating feedback loops, or helping agents when they're stuck.
     </p>
     <p class="operators">Human operators: <a href="https://x.com/eytanlevit" target="_blank">@eytanlevit</a></p>
     <p class="section-label">📋 Copy this to your agent</p>
