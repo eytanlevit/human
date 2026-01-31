@@ -32,49 +32,51 @@ const LANDING_PAGE = `<!DOCTYPE html>
       background: #1a1a1a;
       border: 2px solid #4ade80;
       border-radius: 8px;
-      padding: 1.5rem 2rem;
+      padding: 1.5rem 2rem 1rem 2rem;
       margin-bottom: 1.5rem;
-      position: relative;
     }
     .primary-instruction {
       font-size: 1rem;
       color: #fff;
-      word-break: break-all;
+      line-height: 1.6;
+      margin-bottom: 1rem;
     }
-    .copy-btn {
-      background: none;
+    .copy-btn-primary {
+      background: #4ade80;
       border: none;
       cursor: pointer;
-      padding: 0.5rem;
-      border-radius: 4px;
-      transition: background 0.2s;
-      position: absolute;
-      right: 0.75rem;
-      top: 50%;
-      transform: translateY(-50%);
-    }
-    .copy-btn:hover { background: #333; }
-    .copy-btn svg { width: 20px; height: 20px; fill: #888; }
-    .copy-btn:hover svg { fill: #fff; }
-    .copy-btn.copied svg { fill: #4ade80; }
-    .secondary-label {
-      font-size: 0.75rem;
-      color: #666;
-      margin-bottom: 0.5rem;
-    }
-    .secondary-box {
-      background: #111;
-      border: 1px solid #333;
-      border-radius: 8px;
-      padding: 1rem 1.5rem;
-      margin-bottom: 2rem;
-      display: flex;
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
+      color: #000;
+      font-weight: bold;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+      display: inline-flex;
       align-items: center;
-      justify-content: center;
-      gap: 1rem;
+      gap: 0.5rem;
     }
-    .secondary-cmd { font-size: 1rem; color: #888; }
-    .secondary-cmd .prefix { color: #555; }
+    .copy-btn-primary:hover { background: #22c55e; transform: translateY(-1px); }
+    .copy-btn-primary svg { width: 16px; height: 16px; fill: #000; }
+    .copy-btn-primary.copied { background: #166534; color: #fff; }
+    .copy-btn-primary.copied svg { fill: #fff; }
+    .secondary-text {
+      font-size: 0.85rem;
+      color: #555;
+      margin-bottom: 2rem;
+    }
+    .secondary-text code {
+      color: #888;
+      background: #1a1a1a;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+    }
+    .secondary-text .copy-link {
+      color: #666;
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+    .secondary-text .copy-link:hover { color: #888; }
     .description { color: #aaa; line-height: 1.8; margin-bottom: 2rem; }
     .endpoints {
       text-align: left;
@@ -111,18 +113,13 @@ const LANDING_PAGE = `<!DOCTYPE html>
     <p class="tagline">Get a human to answer your questions</p>
     <p class="section-label">📋 Copy this to your agent</p>
     <div class="primary-box">
-      <code class="primary-instruction">Please read https://humanskill.sh/SKILL.md and follow the instructions</code>
-      <button class="copy-btn" onclick="copyPrimary()" title="Copy to clipboard">
+      <p class="primary-instruction">Please read https://humanskill.sh/SKILL.md and follow the instructions</p>
+      <button class="copy-btn-primary" onclick="copyPrimary()">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+        Copy
       </button>
     </div>
-    <p class="secondary-label">Or install as a skill</p>
-    <div class="secondary-box">
-      <code class="secondary-cmd"><span class="prefix">$</span> npx skills add eytanlevit/human</code>
-      <button class="copy-btn" onclick="copySecondary()" title="Copy" style="position:static;transform:none;">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
-      </button>
-    </div>
+    <p class="secondary-text">Or install as a skill: <code>npx skills add eytanlevit/human</code> <span class="copy-link" onclick="copySecondary()">(copy)</span></p>
     <p class="description">
       An API for AI agents to ask humans questions, verify their work, and get expert advice.
       When your agent is stuck or needs approval, it asks a human and waits for the response.
@@ -152,15 +149,19 @@ const LANDING_PAGE = `<!DOCTYPE html>
   <script>
     function copyPrimary() {
       navigator.clipboard.writeText('Please read https://humanskill.sh/SKILL.md and follow the instructions');
-      const btn = document.querySelectorAll('.copy-btn')[0];
+      const btn = document.querySelector('.copy-btn-primary');
+      btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Copied!';
       btn.classList.add('copied');
-      setTimeout(() => btn.classList.remove('copied'), 1500);
+      setTimeout(() => {
+        btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg> Copy';
+        btn.classList.remove('copied');
+      }, 2000);
     }
     function copySecondary() {
       navigator.clipboard.writeText('npx skills add eytanlevit/human');
-      const btn = document.querySelectorAll('.copy-btn')[1];
-      btn.classList.add('copied');
-      setTimeout(() => btn.classList.remove('copied'), 1500);
+      const link = document.querySelector('.copy-link');
+      link.textContent = '(copied!)';
+      setTimeout(() => link.textContent = '(copy)', 1500);
     }
   </script>
 </body>
