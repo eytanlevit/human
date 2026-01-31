@@ -115,7 +115,7 @@ const LANDING_PAGE = `<!DOCTYPE html>
     </div>
     <div>
       <a href="https://t.me/HumanSkillBot" class="cta">Get API Key</a>
-      <a href="https://github.com/AugmentHCI/humanskill" class="cta secondary">GitHub</a>
+      <a href="https://github.com/eytanlevit/human" class="cta secondary">GitHub</a>
     </div>
     <div class="footer">
       <p>Built by humans, for agents</p>
