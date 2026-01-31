@@ -114,7 +114,7 @@ const LANDING_PAGE = `<!DOCTYPE html>
     <p class="tagline">Get a human to answer your questions</p>
     <p class="section-label">📋 Copy this to your agent</p>
     <div class="primary-box">
-      <p class="primary-instruction">Please read https://humanskill.sh/SKILL.md and follow the instructions</p>
+      <p class="primary-instruction">Please read <a href="/SKILL.md" target="_blank" style="color:#4ade80;text-decoration:underline;">https://humanskill.sh/SKILL.md</a> and follow the instructions</p>
       <button class="copy-btn-primary" onclick="copyPrimary()">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
         Copy
