@@ -19,8 +19,7 @@ const LANDING_PAGE = `<!DOCTYPE html>
       padding: 2rem;
     }
     .container { max-width: 650px; text-align: center; }
-    h1 { font-size: 3rem; margin-bottom: 1rem; color: #fff; }
-    .tagline { font-size: 1.1rem; color: #888; margin-bottom: 1.5rem; }
+    h1 { font-size: 3rem; margin-bottom: 1.5rem; color: #fff; }
     .description { color: #aaa; line-height: 1.8; margin-bottom: 2.5rem; }
     .tagline s { color: #888; text-decoration: line-through; font-size: inherit; }
     .section-label {
@@ -113,7 +112,6 @@ const LANDING_PAGE = `<!DOCTYPE html>
 <body>
   <div class="container">
     <h1>human</h1>
-    <p class="tagline">Let your agents talk with a human (currently Eytan, the creator of this skill)</p>
     <p class="description">
       human is a skill for AI that lets agents ask humans questions, verify their work, and get expert advice. When your agent is stuck or needs approval, it asks a human and waits for the response.
     </p>
