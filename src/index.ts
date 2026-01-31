@@ -115,7 +115,7 @@ const LANDING_PAGE = `<!DOCTYPE html>
     <h1>human</h1>
     <p class="tagline">Let your agents talk with a human (currently Eytan, the creator of this skill)</p>
     <p class="description">
-      An AI skill that lets agents ask humans questions, verify their work, and get expert advice. When your agent is stuck or needs approval, it asks a human and waits for the response.
+      human is a skill for AI that lets agents ask humans questions, verify their work, and get expert advice. When your agent is stuck or needs approval, it asks a human and waits for the response.
     </p>
     <p class="section-label">📋 Copy this to your agent</p>
     <div class="primary-box">
