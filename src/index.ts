@@ -21,7 +21,7 @@ const LANDING_PAGE = `<!DOCTYPE html>
     .container { max-width: 650px; text-align: center; }
     h1 { font-size: 3rem; margin-bottom: 0.5rem; color: #fff; }
     .tagline { font-size: 1.1rem; color: #888; margin-bottom: 2rem; }
-    .tagline s { color: #888; text-decoration: line-through; }
+    .tagline s { color: #888; text-decoration: line-through; font-size: inherit; }
     .section-label {
       font-size: 1.2rem;
       color: #4ade80;
