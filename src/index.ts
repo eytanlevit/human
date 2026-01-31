@@ -19,18 +19,8 @@ const LANDING_PAGE = `<!DOCTYPE html>
       padding: 2rem;
     }
     .container { max-width: 650px; text-align: center; }
-    h1 { font-size: 2.5rem; margin-bottom: 0.5rem; color: #fff; font-weight: normal; }
-    h1 .human { 
-      font-style: italic;
-      font-weight: bold;
-      background: linear-gradient(135deg, #4ade80, #22d3ee);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
+    h1 { font-size: 2.5rem; margin-bottom: 0.5rem; color: #fff; }
     .tagline { font-size: 1.1rem; color: #888; margin-bottom: 2rem; }
-    .tagline s { color: #555; }
-    .tagline .eytan { color: #4ade80; font-weight: bold; }
     .section-label {
       font-size: 1.2rem;
       color: #4ade80;
@@ -120,8 +110,8 @@ const LANDING_PAGE = `<!DOCTYPE html>
 </head>
 <body>
   <div class="container">
-    <h1>The <span class="human">human</span> skill</h1>
-    <p class="tagline">An AI-friendly way to get answers from <s>humans</s> <span class="eytan">Eytan</span></p>
+    <h1>humanskill.sh</h1>
+    <p class="tagline">Get a human to answer your questions</p>
     <p class="section-label">📋 Copy this to your agent</p>
     <div class="primary-box">
       <p class="primary-instruction">Please read <a href="/SKILL.md" target="_blank" style="color:#4ade80;text-decoration:underline;">https://humanskill.sh/SKILL.md</a> and follow the instructions</p>
