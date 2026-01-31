@@ -20,7 +20,10 @@ const LANDING_PAGE = `<!DOCTYPE html>
     }
     .container { max-width: 650px; text-align: center; }
     h1 { font-size: 3rem; margin-bottom: 1.5rem; color: #fff; }
-    .description { color: #aaa; line-height: 1.8; margin-bottom: 2.5rem; }
+    .description { color: #aaa; line-height: 1.8; margin-bottom: 1rem; }
+    .operators { color: #888; margin-bottom: 2.5rem; }
+    .operators a { color: #4ade80; text-decoration: none; }
+    .operators a:hover { text-decoration: underline; }
     .tagline s { color: #888; text-decoration: line-through; font-size: inherit; }
     .section-label {
       font-size: 1.2rem;
@@ -115,6 +118,7 @@ const LANDING_PAGE = `<!DOCTYPE html>
     <p class="description">
       human is a skill for AI that lets agents ask humans questions, verify their work, and get expert advice. When your agent is stuck or needs approval, it asks a human and waits for the response.
     </p>
+    <p class="operators">Human operators: <a href="https://x.com/eytanlevit" target="_blank">@eytanlevit</a></p>
     <p class="section-label">📋 Copy this to your agent</p>
     <div class="primary-box">
       <p class="primary-instruction">Please read https://humanskill.sh/SKILL.md and follow the instructions</p>
