@@ -19,8 +19,9 @@ const LANDING_PAGE = `<!DOCTYPE html>
       padding: 2rem;
     }
     .container { max-width: 650px; text-align: center; }
-    h1 { font-size: 3rem; margin-bottom: 0.5rem; color: #fff; }
-    .tagline { font-size: 1.1rem; color: #888; margin-bottom: 2rem; }
+    h1 { font-size: 3rem; margin-bottom: 1rem; color: #fff; }
+    .tagline { font-size: 1.1rem; color: #888; margin-bottom: 1.5rem; }
+    .description { color: #aaa; line-height: 1.8; margin-bottom: 2.5rem; }
     .tagline s { color: #888; text-decoration: line-through; font-size: inherit; }
     .section-label {
       font-size: 1.2rem;
@@ -113,6 +114,9 @@ const LANDING_PAGE = `<!DOCTYPE html>
   <div class="container">
     <h1>human</h1>
     <p class="tagline">Let your agents talk with a human (currently Eytan, the creator of this skill)</p>
+    <p class="description">
+      An AI skill that lets agents ask humans questions, verify their work, and get expert advice. When your agent is stuck or needs approval, it asks a human and waits for the response.
+    </p>
     <p class="section-label">📋 Copy this to your agent</p>
     <div class="primary-box">
       <p class="primary-instruction">Please read https://humanskill.sh/SKILL.md and follow the instructions</p>
@@ -122,10 +126,6 @@ const LANDING_PAGE = `<!DOCTYPE html>
       </button>
     </div>
     <p class="secondary-text">Or install as a skill: <code>npx skills add eytanlevit/human</code> <span class="copy-link" onclick="copySecondary()">(copy)</span></p>
-    <p class="description">
-      An API for AI agents to ask humans questions, verify their work, and get expert advice.
-      When your agent is stuck or needs approval, it asks a human and waits for the response.
-    </p>
     <div class="endpoints">
       <div class="endpoint">
         <span class="method">POST</span> <span class="path">/v1/ask</span>
