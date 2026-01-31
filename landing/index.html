@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>humanskill.sh - Get a human to answer your questions</title>
+  <meta name="description" content="API for AI agents to ask humans questions, verify work, and get expert advice.">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      background: #0a0a0a;
+      color: #e0e0e0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    
+    .container {
+      max-width: 600px;
+      text-align: center;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      color: #fff;
+    }
+    
+    .tagline {
+      font-size: 1.1rem;
+      color: #888;
+      margin-bottom: 2rem;
+    }
+    
+    .install-box {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 1.5rem 2rem;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+    
+    .install-cmd {
+      font-size: 1.3rem;
+      color: #4ade80;
+    }
+    
+    .install-cmd .prefix {
+      color: #888;
+    }
+    
+    .description {
+      color: #aaa;
+      line-height: 1.8;
+      margin-bottom: 2rem;
+    }
+    
+    .endpoints {
+      text-align: left;
+      background: #111;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .endpoint {
+      margin-bottom: 1rem;
+    }
+    
+    .endpoint:last-child {
+      margin-bottom: 0;
+    }
+    
+    .method {
+      color: #60a5fa;
+      font-weight: bold;
+    }
+    
+    .path {
+      color: #fbbf24;
+    }
+    
+    .endpoint-desc {
+      color: #888;
+      font-size: 0.9rem;
+      margin-left: 1rem;
+    }
+    
+    .cta {
+      display: inline-block;
+      background: #4ade80;
+      color: #000;
+      padding: 0.8rem 2rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+      margin-right: 1rem;
+      margin-bottom: 1rem;
+      transition: transform 0.1s;
+    }
+    
+    .cta:hover {
+      transform: translateY(-2px);
+    }
+    
+    .cta.secondary {
+      background: #333;
+      color: #fff;
+    }
+    
+    .footer {
+      margin-top: 3rem;
+      color: #555;
+      font-size: 0.85rem;
+    }
+    
+    .footer a {
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>humanskill.sh</h1>
+    <p class="tagline">Get a human to answer your questions</p>
+    
+    <div class="install-box">
+      <code class="install-cmd"><span class="prefix">$</span> npx skills add human</code>
+    </div>
+    
+    <p class="description">
+      An API for AI agents to ask humans questions, verify their work, and get expert advice.
+      When your agent is stuck or needs approval, it asks a human and waits for the response.
+    </p>
+    
+    <div class="endpoints">
+      <div class="endpoint">
+        <span class="method">POST</span> <span class="path">/v1/ask</span>
+        <div class="endpoint-desc">Ask a human a question</div>
+      </div>
+      <div class="endpoint">
+        <span class="method">POST</span> <span class="path">/v1/verify</span>
+        <div class="endpoint-desc">Verify expected vs actual results</div>
+      </div>
+      <div class="endpoint">
+        <span class="method">GET</span> <span class="path">/v1/status/:id</span>
+        <div class="endpoint-desc">Check if human has responded</div>
+      </div>
+    </div>
+    
+    <div>
+      <a href="/docs" class="cta">Get API Key</a>
+      <a href="https://github.com/AugmentHCI/humanskill" class="cta secondary">GitHub</a>
+    </div>
+    
+    <div class="footer">
+      <p>Built by humans, for agents</p>
+    </div>
+  </div>
+</body>
+</html>

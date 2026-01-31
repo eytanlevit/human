@@ -1,0 +1,19 @@
+name = "humanskill"
+main = "src/index.ts"
+compatibility_date = "2024-01-01"
+account_id = "c43428f29797556ac1650533280114e2"
+
+[vars]
+ENVIRONMENT = "production"
+
+[[kv_namespaces]]
+binding = "REQUESTS"
+id = "ae50a63fef864ccd83991069b9f7130c"
+
+[[routes]]
+pattern = "humanskill.sh/*"
+zone_id = "6f62c348c7cc69665b42904b82792635"
+
+[[routes]]
+pattern = "www.humanskill.sh/*"
+zone_id = "6f62c348c7cc69665b42904b82792635"
