@@ -376,6 +376,49 @@ export default {
         const chatId = message.chat.id.toString();
         const text = message.text.trim();
 
+        // Handle /register command (for groups)
+        if (text.startsWith('/register')) {
+          // Check if this is a group
+          if (message.chat.type === 'private') {
+            await sendTelegram(
+              env.TELEGRAM_BOT_TOKEN,
+              chatId,
+              `⚠️ Use /register in a *group chat*, not in DMs.\n\nFor personal use, just use /start to get your API key.`
+            );
+            return new Response('OK');
+          }
+
+          // Extract API key from command: /register hsk_xxx
+          const parts = text.split(' ');
+          if (parts.length < 2 || !parts[1].startsWith('hsk_')) {
+            await sendTelegram(
+              env.TELEGRAM_BOT_TOKEN,
+              chatId,
+              `📋 *Register this group for Human Skill*\n\nUsage: \`/register YOUR_API_KEY\`\n\nExample: \`/register hsk_abc123...\`\n\nThis links your API key to this group. Questions will appear here and anyone can reply.`
+            );
+            return new Response('OK');
+          }
+
+          const apiKey = parts[1];
+          const keyData = await env.REQUESTS.get(`apikey:${apiKey}`, 'json') as ApiKey | null;
+          
+          if (!keyData) {
+            await sendTelegram(env.TELEGRAM_BOT_TOKEN, chatId, `❌ Invalid API key. Get one with /start in a DM with me.`);
+            return new Response('OK');
+          }
+
+          // Update the API key to point to this group
+          keyData.humanTelegramId = chatId;
+          await env.REQUESTS.put(`apikey:${apiKey}`, JSON.stringify(keyData));
+
+          await sendTelegram(
+            env.TELEGRAM_BOT_TOKEN,
+            chatId,
+            `✅ *Group registered!*\n\nQuestions from agents using this API key will now appear here. Anyone in the group can reply.\n\n_Tip: First reply wins!_`
+          );
+          return new Response('OK');
+        }
+
         // Handle /start command
         if (text === '/start') {
           // Generate API key for this user
