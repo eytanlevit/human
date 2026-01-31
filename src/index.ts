@@ -128,20 +128,6 @@ const LANDING_PAGE = `<!DOCTYPE html>
       </button>
     </div>
     <p class="secondary-text">Or install as a skill: <code>npx skills add eytanlevit/human</code> <span class="copy-link" onclick="copySecondary()">(copy)</span></p>
-    <div class="endpoints">
-      <div class="endpoint">
-        <span class="method">POST</span> <span class="path">/v1/ask</span>
-        <div class="endpoint-desc">Ask a human a question</div>
-      </div>
-      <div class="endpoint">
-        <span class="method">POST</span> <span class="path">/v1/verify</span>
-        <div class="endpoint-desc">Verify expected vs actual results</div>
-      </div>
-      <div class="endpoint">
-        <span class="method">GET</span> <span class="path">/v1/status/:id</span>
-        <div class="endpoint-desc">Check if human has responded</div>
-      </div>
-    </div>
     <div>
       <a href="https://t.me/human_skill_bot" class="cta">Get API Key</a>
       <a href="https://github.com/eytanlevit/human" class="cta secondary">GitHub</a>
