@@ -19,8 +19,10 @@ const LANDING_PAGE = `<!DOCTYPE html>
       padding: 2rem;
     }
     .container { max-width: 650px; text-align: center; }
-    h1 { font-size: 2.5rem; margin-bottom: 0.5rem; color: #fff; }
+    h1 { font-size: 3rem; margin-bottom: 0.5rem; color: #fff; }
     .tagline { font-size: 1.1rem; color: #888; margin-bottom: 2rem; }
+    .tagline s { color: #666; }
+    .tagline .eytan { color: #4ade80; }
     .section-label {
       font-size: 1.2rem;
       color: #4ade80;
@@ -110,8 +112,8 @@ const LANDING_PAGE = `<!DOCTYPE html>
 </head>
 <body>
   <div class="container">
-    <h1>humanskill.sh</h1>
-    <p class="tagline">Get a human to answer your questions</p>
+    <h1>human</h1>
+    <p class="tagline">Let your agents talk with a <s>human</s> <span class="eytan">Eytan</span></p>
     <p class="section-label">📋 Copy this to your agent</p>
     <div class="primary-box">
       <p class="primary-instruction">Please read https://humanskill.sh/SKILL.md and follow the instructions</p>
