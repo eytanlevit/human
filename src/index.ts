@@ -18,23 +18,29 @@ const LANDING_PAGE = `<!DOCTYPE html>
       justify-content: center;
       padding: 2rem;
     }
-    .container { max-width: 600px; text-align: center; }
+    .container { max-width: 650px; text-align: center; }
     h1 { font-size: 2.5rem; margin-bottom: 0.5rem; color: #fff; }
     .tagline { font-size: 1.1rem; color: #888; margin-bottom: 2rem; }
-    .install-box {
+    .section-label {
+      font-size: 0.85rem;
+      color: #4ade80;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+    }
+    .primary-box {
       background: #1a1a1a;
-      border: 1px solid #333;
+      border: 2px solid #4ade80;
       border-radius: 8px;
       padding: 1.5rem 2rem;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
       position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 1rem;
     }
-    .install-cmd { font-size: 1.3rem; color: #4ade80; }
-    .install-cmd .prefix { color: #888; }
+    .primary-instruction {
+      font-size: 1rem;
+      color: #fff;
+      word-break: break-all;
+    }
     .copy-btn {
       background: none;
       border: none;
@@ -42,11 +48,33 @@ const LANDING_PAGE = `<!DOCTYPE html>
       padding: 0.5rem;
       border-radius: 4px;
       transition: background 0.2s;
+      position: absolute;
+      right: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
     }
     .copy-btn:hover { background: #333; }
     .copy-btn svg { width: 20px; height: 20px; fill: #888; }
     .copy-btn:hover svg { fill: #fff; }
     .copy-btn.copied svg { fill: #4ade80; }
+    .secondary-label {
+      font-size: 0.75rem;
+      color: #666;
+      margin-bottom: 0.5rem;
+    }
+    .secondary-box {
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 1rem 1.5rem;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+    }
+    .secondary-cmd { font-size: 1rem; color: #888; }
+    .secondary-cmd .prefix { color: #555; }
     .description { color: #aaa; line-height: 1.8; margin-bottom: 2rem; }
     .endpoints {
       text-align: left;
@@ -81,20 +109,20 @@ const LANDING_PAGE = `<!DOCTYPE html>
   <div class="container">
     <h1>humanskill.sh</h1>
     <p class="tagline">Get a human to answer your questions</p>
-    <div class="install-box">
-      <code class="install-cmd"><span class="prefix">$</span> npx skills add eytanlevit/human</code>
-      <button class="copy-btn" onclick="copyCmd()" title="Copy to clipboard">
+    <p class="section-label">📋 Copy this to your agent</p>
+    <div class="primary-box">
+      <code class="primary-instruction">Please read https://humanskill.sh/SKILL.md and follow the instructions</code>
+      <button class="copy-btn" onclick="copyPrimary()" title="Copy to clipboard">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
       </button>
     </div>
-    <script>
-      function copyCmd() {
-        navigator.clipboard.writeText('npx skills add eytanlevit/human');
-        const btn = document.querySelector('.copy-btn');
-        btn.classList.add('copied');
-        setTimeout(() => btn.classList.remove('copied'), 1500);
-      }
-    </script>
+    <p class="secondary-label">Or install as a skill</p>
+    <div class="secondary-box">
+      <code class="secondary-cmd"><span class="prefix">$</span> npx skills add eytanlevit/human</code>
+      <button class="copy-btn" onclick="copySecondary()" title="Copy" style="position:static;transform:none;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+      </button>
+    </div>
     <p class="description">
       An API for AI agents to ask humans questions, verify their work, and get expert advice.
       When your agent is stuck or needs approval, it asks a human and waits for the response.
@@ -121,8 +149,100 @@ const LANDING_PAGE = `<!DOCTYPE html>
       <p>Built by humans, for agents</p>
     </div>
   </div>
+  <script>
+    function copyPrimary() {
+      navigator.clipboard.writeText('Please read https://humanskill.sh/SKILL.md and follow the instructions');
+      const btn = document.querySelectorAll('.copy-btn')[0];
+      btn.classList.add('copied');
+      setTimeout(() => btn.classList.remove('copied'), 1500);
+    }
+    function copySecondary() {
+      navigator.clipboard.writeText('npx skills add eytanlevit/human');
+      const btn = document.querySelectorAll('.copy-btn')[1];
+      btn.classList.add('copied');
+      setTimeout(() => btn.classList.remove('copied'), 1500);
+    }
+  </script>
 </body>
 </html>`;
+
+const SKILL_MD = `---
+name: human
+description: Get help from a human when you're stuck, need verification, or want expert advice.
+---
+
+# Human Skill
+
+Ask humans questions and get their responses. Use when you need judgment calls, verification, or are blocked on a decision.
+
+## Setup
+
+1. Get your API key: Message @human_skill_bot on Telegram and send /start
+2. Set the environment variable:
+\`\`\`bash
+export HUMANSKILL_API_KEY="hsk_..."
+\`\`\`
+
+## How to Ask a Human
+
+Send a POST request to ask a question:
+
+\`\`\`bash
+curl -X POST https://humanskill.sh/v1/ask \\
+  -H "Authorization: Bearer $HUMANSKILL_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{"prompt": "Your question here"}'
+\`\`\`
+
+Response:
+\`\`\`json
+{"requestId": "abc123", "status": "pending", "pollUrl": "https://humanskill.sh/v1/status/abc123"}
+\`\`\`
+
+## How to Get the Response
+
+Poll until status is "completed":
+
+\`\`\`bash
+curl https://humanskill.sh/v1/status/REQUEST_ID \\
+  -H "Authorization: Bearer $HUMANSKILL_API_KEY"
+\`\`\`
+
+Response when complete:
+\`\`\`json
+{"requestId": "abc123", "status": "completed", "response": "The human's answer"}
+\`\`\`
+
+## Verify Command
+
+Ask a human to verify expected vs actual results:
+
+\`\`\`bash
+curl -X POST https://humanskill.sh/v1/verify \\
+  -H "Authorization: Bearer $HUMANSKILL_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "context": "What you are verifying",
+    "expected": "What you expected",
+    "actual": "What actually happened"
+  }'
+\`\`\`
+
+## When to Use
+
+- You are uncertain about a decision
+- You need to verify your output matches expectations  
+- You are blocked on something requiring human judgment
+- You want approval before a destructive or irreversible action
+- You need real-world information you cannot access
+
+## Example Workflow
+
+1. You encounter a decision you are unsure about
+2. Call /v1/ask with your question
+3. Poll /v1/status until completed (check every 5-10 seconds)
+4. Use the human's response to continue your work
+`;
 
 interface Env {
   REQUESTS: KVNamespace;
@@ -150,12 +270,10 @@ interface ApiKey {
   createdAt: number;
 }
 
-// Generate a short unique ID
 function generateId(): string {
   return Math.random().toString(36).substring(2, 10) + Date.now().toString(36);
 }
 
-// Send message to Telegram
 async function sendTelegram(
   token: string,
   chatId: string,
@@ -171,31 +289,24 @@ async function sendTelegram(
   if (replyMarkup) {
     body.reply_markup = JSON.stringify(replyMarkup);
   }
-  
   const res = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   });
-  
   return res.ok;
 }
 
-// CORS headers
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
 };
 
-// JSON response helper
 function json(data: any, status = 200): Response {
   return new Response(JSON.stringify(data), {
     status,
-    headers: {
-      'Content-Type': 'application/json',
-      ...corsHeaders,
-    },
+    headers: { 'Content-Type': 'application/json', ...corsHeaders },
   });
 }
 
@@ -204,19 +315,13 @@ export default {
     const url = new URL(request.url);
     const path = url.pathname;
 
-    // Handle CORS preflight
     if (request.method === 'OPTIONS') {
       return new Response(null, { headers: corsHeaders });
     }
 
-    // Health check (API)
+    // Health check
     if (path === '/health') {
-      return json({ 
-        status: 'ok', 
-        service: 'humanskill.sh',
-        version: '0.1.0',
-        endpoints: ['/v1/ask', '/v1/verify', '/v1/status/:id']
-      });
+      return json({ status: 'ok', service: 'humanskill.sh', version: '0.1.0' });
     }
 
     // Landing page
@@ -226,306 +331,176 @@ export default {
       });
     }
 
-    // === API Routes ===
-    
-    // POST /v1/ask - Ask a human a question
-    if (path === '/v1/ask' && request.method === 'POST') {
-      try {
-        const apiKey = request.headers.get('Authorization')?.replace('Bearer ', '');
-        if (!apiKey) {
-          return json({ error: 'Missing API key' }, 401);
-        }
-
-        // Look up API key
-        const keyData = await env.REQUESTS.get(`apikey:${apiKey}`, 'json') as ApiKey | null;
-        if (!keyData) {
-          return json({ error: 'Invalid API key' }, 401);
-        }
-
-        const body = await request.json() as any;
-        const { prompt, imageUrl, timeout = 300 } = body;
-
-        if (!prompt) {
-          return json({ error: 'Missing prompt' }, 400);
-        }
-
-        // Create request record
-        const reqId = generateId();
-        const reqData: HumanRequest = {
-          id: reqId,
-          type: 'ask',
-          prompt,
-          imageUrl,
-          humanId: keyData.humanTelegramId,
-          status: 'pending',
-          createdAt: Date.now(),
-        };
-
-        // Store request
-        await env.REQUESTS.put(`request:${reqId}`, JSON.stringify(reqData), {
-          expirationTtl: 86400, // 24 hours
-        });
-
-        // Send to human via Telegram
-        const message = `🤖 *Human Skill Request*\n\n${prompt}\n\n_Reply to this message to respond._\n\n\`ID: ${reqId}\``;
-        
-        const sent = await sendTelegram(env.TELEGRAM_BOT_TOKEN, keyData.humanTelegramId, message);
-        
-        if (!sent) {
-          return json({ error: 'Failed to reach human' }, 500);
-        }
-
-        return json({
-          requestId: reqId,
-          status: 'pending',
-          pollUrl: `https://humanskill.sh/v1/status/${reqId}`,
-          message: 'Request sent to human. Poll status endpoint for response.',
-        });
-
-      } catch (e: any) {
-        return json({ error: e.message }, 500);
-      }
-    }
-
-    // POST /v1/verify - Ask human to verify expected vs actual
-    if (path === '/v1/verify' && request.method === 'POST') {
-      try {
-        const apiKey = request.headers.get('Authorization')?.replace('Bearer ', '');
-        if (!apiKey) {
-          return json({ error: 'Missing API key' }, 401);
-        }
-
-        const keyData = await env.REQUESTS.get(`apikey:${apiKey}`, 'json') as ApiKey | null;
-        if (!keyData) {
-          return json({ error: 'Invalid API key' }, 401);
-        }
-
-        const body = await request.json() as any;
-        const { expected, actual, context } = body;
-
-        if (!expected || !actual) {
-          return json({ error: 'Missing expected or actual' }, 400);
-        }
-
-        const reqId = generateId();
-        const reqData: HumanRequest = {
-          id: reqId,
-          type: 'verify',
-          prompt: context || 'Please verify',
-          expected,
-          actual,
-          humanId: keyData.humanTelegramId,
-          status: 'pending',
-          createdAt: Date.now(),
-        };
-
-        await env.REQUESTS.put(`request:${reqId}`, JSON.stringify(reqData), {
-          expirationTtl: 86400,
-        });
-
-        const message = `🔍 *Verification Request*\n\n${context || 'Please verify:'}\n\n*Expected:*\n\`\`\`\n${expected}\n\`\`\`\n\n*Actual:*\n\`\`\`\n${actual}\n\`\`\`\n\n_Reply ✅ to confirm, ❌ to reject, or explain the issue._\n\n\`ID: ${reqId}\``;
-
-        const sent = await sendTelegram(env.TELEGRAM_BOT_TOKEN, keyData.humanTelegramId, message);
-
-        if (!sent) {
-          return json({ error: 'Failed to reach human' }, 500);
-        }
-
-        return json({
-          requestId: reqId,
-          status: 'pending',
-          pollUrl: `https://humanskill.sh/v1/status/${reqId}`,
-        });
-
-      } catch (e: any) {
-        return json({ error: e.message }, 500);
-      }
-    }
-
-    // GET /v1/status/:id - Check request status
-    if (path.startsWith('/v1/status/') && request.method === 'GET') {
-      const reqId = path.split('/').pop();
-      if (!reqId) {
-        return json({ error: 'Missing request ID' }, 400);
-      }
-
-      const reqData = await env.REQUESTS.get(`request:${reqId}`, 'json') as HumanRequest | null;
-      if (!reqData) {
-        return json({ error: 'Request not found' }, 404);
-      }
-
-      return json({
-        requestId: reqData.id,
-        status: reqData.status,
-        response: reqData.response,
-        createdAt: reqData.createdAt,
-        respondedAt: reqData.respondedAt,
+    // SKILL.md - Instructions for agents
+    if (path === '/SKILL.md' || path === '/skill.md') {
+      return new Response(SKILL_MD, {
+        headers: { 'Content-Type': 'text/markdown; charset=utf-8' },
       });
     }
 
-    // POST /webhook/telegram - Receive Telegram updates
+    // POST /v1/ask
+    if (path === '/v1/ask' && request.method === 'POST') {
+      try {
+        const apiKey = request.headers.get('Authorization')?.replace('Bearer ', '');
+        if (!apiKey) return json({ error: 'Missing API key' }, 401);
+
+        const keyData = await env.REQUESTS.get(`apikey:${apiKey}`, 'json') as ApiKey | null;
+        if (!keyData) return json({ error: 'Invalid API key' }, 401);
+
+        const body = await request.json() as any;
+        const { prompt, imageUrl } = body;
+        if (!prompt) return json({ error: 'Missing prompt' }, 400);
+
+        const reqId = generateId();
+        const reqData: HumanRequest = {
+          id: reqId, type: 'ask', prompt, imageUrl,
+          humanId: keyData.humanTelegramId, status: 'pending', createdAt: Date.now(),
+        };
+
+        await env.REQUESTS.put(`request:${reqId}`, JSON.stringify(reqData), { expirationTtl: 86400 });
+
+        const message = `🤖 *Human Skill Request*\n\n${prompt}\n\n_Reply to this message to respond._\n\n\`ID: ${reqId}\``;
+        const sent = await sendTelegram(env.TELEGRAM_BOT_TOKEN, keyData.humanTelegramId, message);
+        if (!sent) return json({ error: 'Failed to reach human' }, 500);
+
+        return json({ requestId: reqId, status: 'pending', pollUrl: `https://humanskill.sh/v1/status/${reqId}` });
+      } catch (e: any) {
+        return json({ error: e.message }, 500);
+      }
+    }
+
+    // POST /v1/verify
+    if (path === '/v1/verify' && request.method === 'POST') {
+      try {
+        const apiKey = request.headers.get('Authorization')?.replace('Bearer ', '');
+        if (!apiKey) return json({ error: 'Missing API key' }, 401);
+
+        const keyData = await env.REQUESTS.get(`apikey:${apiKey}`, 'json') as ApiKey | null;
+        if (!keyData) return json({ error: 'Invalid API key' }, 401);
+
+        const body = await request.json() as any;
+        const { expected, actual, context } = body;
+        if (!expected || !actual) return json({ error: 'Missing expected or actual' }, 400);
+
+        const reqId = generateId();
+        const reqData: HumanRequest = {
+          id: reqId, type: 'verify', prompt: context || 'Please verify',
+          expected, actual, humanId: keyData.humanTelegramId, status: 'pending', createdAt: Date.now(),
+        };
+
+        await env.REQUESTS.put(`request:${reqId}`, JSON.stringify(reqData), { expirationTtl: 86400 });
+
+        const message = `🔍 *Verification Request*\n\n${context || 'Please verify:'}\n\n*Expected:*\n\`\`\`\n${expected}\n\`\`\`\n\n*Actual:*\n\`\`\`\n${actual}\n\`\`\`\n\n_Reply ✅ to confirm, ❌ to reject, or explain._\n\n\`ID: ${reqId}\``;
+        const sent = await sendTelegram(env.TELEGRAM_BOT_TOKEN, keyData.humanTelegramId, message);
+        if (!sent) return json({ error: 'Failed to reach human' }, 500);
+
+        return json({ requestId: reqId, status: 'pending', pollUrl: `https://humanskill.sh/v1/status/${reqId}` });
+      } catch (e: any) {
+        return json({ error: e.message }, 500);
+      }
+    }
+
+    // GET /v1/status/:id
+    if (path.startsWith('/v1/status/') && request.method === 'GET') {
+      const reqId = path.split('/').pop();
+      if (!reqId) return json({ error: 'Missing request ID' }, 400);
+
+      const reqData = await env.REQUESTS.get(`request:${reqId}`, 'json') as HumanRequest | null;
+      if (!reqData) return json({ error: 'Request not found' }, 404);
+
+      return json({
+        requestId: reqData.id, status: reqData.status, response: reqData.response,
+        createdAt: reqData.createdAt, respondedAt: reqData.respondedAt,
+      });
+    }
+
+    // POST /webhook/telegram
     if (path === '/webhook/telegram' && request.method === 'POST') {
       try {
         const update = await request.json() as any;
         const message = update.message;
-        
-        if (!message?.text) {
-          return new Response('OK');
-        }
+        if (!message?.text) return new Response('OK');
 
         const chatId = message.chat.id.toString();
         const text = message.text.trim();
 
-        // Handle /register command (for groups)
+        // /register for groups
         if (text.startsWith('/register')) {
-          // Check if this is a group
           if (message.chat.type === 'private') {
-            await sendTelegram(
-              env.TELEGRAM_BOT_TOKEN,
-              chatId,
-              `⚠️ Use /register in a *group chat*, not in DMs.\n\nFor personal use, just use /start to get your API key.`
-            );
+            await sendTelegram(env.TELEGRAM_BOT_TOKEN, chatId, `⚠️ Use /register in a *group chat*.\n\nFor personal use, send /start`);
             return new Response('OK');
           }
-
-          // Extract API key from command: /register hsk_xxx
           const parts = text.split(' ');
           if (parts.length < 2 || !parts[1].startsWith('hsk_')) {
-            await sendTelegram(
-              env.TELEGRAM_BOT_TOKEN,
-              chatId,
-              `📋 *Register this group for Human Skill*\n\nUsage: \`/register YOUR_API_KEY\`\n\nExample: \`/register hsk_abc123...\`\n\nThis links your API key to this group. Questions will appear here and anyone can reply.`
-            );
+            await sendTelegram(env.TELEGRAM_BOT_TOKEN, chatId, `📋 *Register this group*\n\nUsage: \`/register YOUR_API_KEY\`\n\nExample: \`/register hsk_abc123...\``);
             return new Response('OK');
           }
-
           const apiKey = parts[1];
           const keyData = await env.REQUESTS.get(`apikey:${apiKey}`, 'json') as ApiKey | null;
-          
           if (!keyData) {
-            await sendTelegram(env.TELEGRAM_BOT_TOKEN, chatId, `❌ Invalid API key. Get one with /start in a DM with me.`);
+            await sendTelegram(env.TELEGRAM_BOT_TOKEN, chatId, `❌ Invalid API key.`);
             return new Response('OK');
           }
-
-          // Update the API key to point to this group
           keyData.humanTelegramId = chatId;
           await env.REQUESTS.put(`apikey:${apiKey}`, JSON.stringify(keyData));
-
-          await sendTelegram(
-            env.TELEGRAM_BOT_TOKEN,
-            chatId,
-            `✅ *Group registered!*\n\nQuestions from agents using this API key will now appear here. Anyone in the group can reply.\n\n_Tip: First reply wins!_`
-          );
+          await sendTelegram(env.TELEGRAM_BOT_TOKEN, chatId, `✅ *Group registered!* Questions will appear here.`);
           return new Response('OK');
         }
 
-        // Handle /start command
+        // /start
         if (text === '/start') {
-          // Generate API key for this user
           const apiKey = 'hsk_' + generateId() + generateId();
-          const keyData: ApiKey = {
-            userId: generateId(),
-            humanTelegramId: chatId,
-            createdAt: Date.now(),
-          };
+          const keyData: ApiKey = { userId: generateId(), humanTelegramId: chatId, createdAt: Date.now() };
           await env.REQUESTS.put(`apikey:${apiKey}`, JSON.stringify(keyData));
-
-          await sendTelegram(
-            env.TELEGRAM_BOT_TOKEN,
-            chatId,
-            `👋 *Welcome to Human Skill!*\n\nThis bot lets AI agents ask you questions and get your responses.\n\n*Your API Key:*\n\`${apiKey}\`\n\nShare this key with your AI agent. When it needs help, you'll receive messages here.\n\n*Docs:* humanskill.sh`
-          );
+          await sendTelegram(env.TELEGRAM_BOT_TOKEN, chatId, `👋 *Welcome to Human Skill!*\n\nYour API Key:\n\`${apiKey}\`\n\nShare this with your AI agent. Questions will arrive here.\n\n*Docs:* humanskill.sh`);
           return new Response('OK');
         }
 
-        // Handle non-reply messages
+        // Non-reply message
         if (!message.reply_to_message?.text) {
-          await sendTelegram(
-            env.TELEGRAM_BOT_TOKEN,
-            chatId,
-            `🤖 This bot receives questions from AI agents.\n\nWhen an agent asks you something, reply to that message to respond.\n\nNeed an API key? Send /start`
-          );
+          await sendTelegram(env.TELEGRAM_BOT_TOKEN, chatId, `🤖 This bot receives questions from AI agents.\n\nReply to a question message to respond.\n\nNeed an API key? Send /start`);
           return new Response('OK');
         }
 
-        // Extract request ID from the original message
+        // Handle reply
         const originalText = message.reply_to_message.text;
         const idMatch = originalText.match(/ID: ([a-z0-9]+)/);
-        
-        if (!idMatch) {
-          return new Response('OK');
-        }
+        if (!idMatch) return new Response('OK');
 
         const reqId = idMatch[1];
         const reqData = await env.REQUESTS.get(`request:${reqId}`, 'json') as HumanRequest | null;
+        if (!reqData || reqData.status === 'completed') return new Response('OK');
 
-        if (!reqData || reqData.status === 'completed') {
-          return new Response('OK');
-        }
-
-        // Update request with response
         reqData.status = 'completed';
         reqData.response = message.text;
         reqData.respondedAt = Date.now();
+        await env.REQUESTS.put(`request:${reqId}`, JSON.stringify(reqData), { expirationTtl: 86400 });
 
-        await env.REQUESTS.put(`request:${reqId}`, JSON.stringify(reqData), {
-          expirationTtl: 86400,
-        });
-
-        // Confirm to human
-        await sendTelegram(
-          env.TELEGRAM_BOT_TOKEN,
-          message.chat.id.toString(),
-          `✅ Response recorded for request \`${reqId}\``
-        );
-
+        await sendTelegram(env.TELEGRAM_BOT_TOKEN, chatId, `✅ Response recorded for \`${reqId}\``);
         return new Response('OK');
-
       } catch (e) {
-        console.error('Webhook error:', e);
         return new Response('OK');
       }
     }
 
-    // POST /v1/register - Register a new user (temporary, for MVP)
+    // POST /v1/register (API)
     if (path === '/v1/register' && request.method === 'POST') {
       try {
         const body = await request.json() as any;
         const { telegramId } = body;
+        if (!telegramId) return json({ error: 'Missing telegramId' }, 400);
 
-        if (!telegramId) {
-          return json({ error: 'Missing telegramId' }, 400);
-        }
-
-        // Generate API key
         const apiKey = 'hsk_' + generateId() + generateId();
-        
-        const keyData: ApiKey = {
-          userId: generateId(),
-          humanTelegramId: telegramId,
-          createdAt: Date.now(),
-        };
-
+        const keyData: ApiKey = { userId: generateId(), humanTelegramId: telegramId, createdAt: Date.now() };
         await env.REQUESTS.put(`apikey:${apiKey}`, JSON.stringify(keyData));
 
-        // Notify the human
-        await sendTelegram(
-          env.TELEGRAM_BOT_TOKEN,
-          telegramId,
-          `🎉 *Welcome to Human Skill!*\n\nYour API key:\n\`${apiKey}\`\n\nAdd this to your agent's environment and start receiving requests from AI agents.\n\nDocs: https://humanskill.sh/docs`
-        );
-
-        return json({
-          apiKey,
-          message: 'API key sent to your Telegram',
-        });
-
+        await sendTelegram(env.TELEGRAM_BOT_TOKEN, telegramId, `🎉 *Welcome to Human Skill!*\n\nYour API key:\n\`${apiKey}\`\n\nDocs: humanskill.sh`);
+        return json({ apiKey, message: 'API key sent to Telegram' });
       } catch (e: any) {
         return json({ error: e.message }, 500);
       }
     }
 
-    // 404 for unknown routes
     return json({ error: 'Not found' }, 404);
   },
 };
