@@ -21,7 +21,7 @@ const LANDING_PAGE = `<!DOCTYPE html>
     }
     .container { max-width: 650px; text-align: center; }
     h1 { font-size: 3rem; margin-bottom: 1.5rem; color: #fff; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
-    h1 svg { width: 2.5rem; height: 2.5rem; stroke: #4ade80; }
+    h1 svg { width: 2.5rem; height: 2.5rem; stroke: #fff; }
     .description { color: #aaa; line-height: 1.8; margin-bottom: 1rem; }
     .operators { color: #888; margin-bottom: 2.5rem; }
     .operators a { color: #4ade80; text-decoration: none; }
