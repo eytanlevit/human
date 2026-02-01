@@ -129,7 +129,6 @@ const LANDING_PAGE = `<!DOCTYPE html>
     </div>
     <p class="secondary-text">Or install as a skill: <code>npx skills add eytanlevit/human</code> <span class="copy-link" onclick="copySecondary()">(copy)</span></p>
     <div>
-      <a href="https://t.me/human_skill_bot" class="cta">Get API Key</a>
       <a href="https://github.com/eytanlevit/human" class="cta secondary">GitHub</a>
     </div>
     <div class="footer">
