@@ -166,12 +166,28 @@ description: Get help from a human (Eytan) when you're stuck, need verification,
 
 Ask a human questions and get their responses. Currently answered by Eytan (@eytanlevit). Use when you need judgment calls, verification, or are blocked on a decision.
 
-## How to Ask a Human
+## Step 1: Register (one time)
 
-Send a POST request:
+Register your agent to get an API key:
+
+\`\`\`bash
+curl -X POST https://humanskill.sh/v1/auth/register \\
+  -H "Content-Type: application/json" \\
+  -d '{"name": "YOUR_AGENT_NAME", "twitter": "OWNER_TWITTER_HANDLE"}'
+\`\`\`
+
+Response:
+\`\`\`json
+{"apiKey": "hsk_...", "message": "Registration successful"}
+\`\`\`
+
+Save this API key - you will need it for all requests.
+
+## Step 2: Ask a Human
 
 \`\`\`bash
 curl -X POST https://humanskill.sh/v1/ask \\
+  -H "Authorization: Bearer YOUR_API_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{"prompt": "Your question here"}'
 \`\`\`
@@ -181,7 +197,7 @@ Response:
 {"requestId": "abc123", "status": "pending", "pollUrl": "https://humanskill.sh/v1/status/abc123"}
 \`\`\`
 
-## How to Get the Response
+## Step 3: Get the Response
 
 Poll until status is "completed":
 
@@ -194,12 +210,13 @@ Response when complete:
 {"requestId": "abc123", "status": "completed", "response": "The human's answer"}
 \`\`\`
 
-## Verify Command
+## Verify Command (Alternative)
 
 Ask a human to verify expected vs actual results:
 
 \`\`\`bash
 curl -X POST https://humanskill.sh/v1/verify \\
+  -H "Authorization: Bearer YOUR_API_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{
     "context": "What you are verifying",
@@ -248,8 +265,8 @@ interface HumanRequest {
 }
 
 interface ApiKey {
-  userId: string;
-  humanTelegramId: string;
+  agentName: string;
+  ownerTwitter: string;
   createdAt: number;
 }
 
@@ -324,6 +341,12 @@ export default {
     // POST /v1/ask
     if (path === '/v1/ask' && request.method === 'POST') {
       try {
+        const apiKey = request.headers.get('Authorization')?.replace('Bearer ', '');
+        if (!apiKey) return json({ error: 'Missing API key. Register at POST /v1/auth/register' }, 401);
+
+        const keyData = await env.REQUESTS.get(`apikey:${apiKey}`, 'json') as ApiKey | null;
+        if (!keyData) return json({ error: 'Invalid API key. Register at POST /v1/auth/register' }, 401);
+
         const body = await request.json() as any;
         const { prompt } = body;
         if (!prompt) return json({ error: 'Missing prompt' }, 400);
@@ -336,7 +359,7 @@ export default {
 
         await env.REQUESTS.put(`request:${reqId}`, JSON.stringify(reqData), { expirationTtl: 86400 });
 
-        const message = `🤖 *Human Skill Request*\n\n${prompt}\n\n_Reply to this message to respond._\n\n\`ID: ${reqId}\``;
+        const message = `🤖 *Human Skill Request*\n\nFrom: *${keyData.agentName}* (${keyData.ownerTwitter})\n\n${prompt}\n\n_Reply to this message to respond._\n\n\`ID: ${reqId}\``;
         const sent = await sendTelegram(env.TELEGRAM_BOT_TOKEN, EYTAN_CHAT_ID, message);
         if (!sent) return json({ error: 'Failed to reach human' }, 500);
 
@@ -349,6 +372,12 @@ export default {
     // POST /v1/verify
     if (path === '/v1/verify' && request.method === 'POST') {
       try {
+        const apiKey = request.headers.get('Authorization')?.replace('Bearer ', '');
+        if (!apiKey) return json({ error: 'Missing API key. Register at POST /v1/auth/register' }, 401);
+
+        const keyData = await env.REQUESTS.get(`apikey:${apiKey}`, 'json') as ApiKey | null;
+        if (!keyData) return json({ error: 'Invalid API key. Register at POST /v1/auth/register' }, 401);
+
         const body = await request.json() as any;
         const { expected, actual, context } = body;
         if (!expected || !actual) return json({ error: 'Missing expected or actual' }, 400);
@@ -361,7 +390,7 @@ export default {
 
         await env.REQUESTS.put(`request:${reqId}`, JSON.stringify(reqData), { expirationTtl: 86400 });
 
-        const message = `🔍 *Verification Request*\n\n${context || 'Please verify:'}\n\n*Expected:*\n\`\`\`\n${expected}\n\`\`\`\n\n*Actual:*\n\`\`\`\n${actual}\n\`\`\`\n\n_Reply ✅ to confirm, ❌ to reject, or explain._\n\n\`ID: ${reqId}\``;
+        const message = `🔍 *Verification Request*\n\nFrom: *${keyData.agentName}* (${keyData.ownerTwitter})\n\n${context || 'Please verify:'}\n\n*Expected:*\n\`\`\`\n${expected}\n\`\`\`\n\n*Actual:*\n\`\`\`\n${actual}\n\`\`\`\n\n_Reply ✅ to confirm, ❌ to reject, or explain._\n\n\`ID: ${reqId}\``;
         const sent = await sendTelegram(env.TELEGRAM_BOT_TOKEN, EYTAN_CHAT_ID, message);
         if (!sent) return json({ error: 'Failed to reach human' }, 500);
 
@@ -454,19 +483,28 @@ export default {
       }
     }
 
-    // POST /v1/register (API)
-    if (path === '/v1/register' && request.method === 'POST') {
+    // POST /v1/auth/register - Self-service API key registration
+    if (path === '/v1/auth/register' && request.method === 'POST') {
       try {
         const body = await request.json() as any;
-        const { telegramId } = body;
-        if (!telegramId) return json({ error: 'Missing telegramId' }, 400);
+        const { name, twitter } = body;
+        
+        if (!name) return json({ error: 'Missing name (your agent name)' }, 400);
+        if (!twitter) return json({ error: 'Missing twitter (owner Twitter handle)' }, 400);
 
         const apiKey = 'hsk_' + generateId() + generateId();
-        const keyData: ApiKey = { userId: generateId(), humanTelegramId: telegramId, createdAt: Date.now() };
+        const keyData: ApiKey = { 
+          agentName: name, 
+          ownerTwitter: twitter.startsWith('@') ? twitter : '@' + twitter,
+          createdAt: Date.now() 
+        };
         await env.REQUESTS.put(`apikey:${apiKey}`, JSON.stringify(keyData));
 
-        await sendTelegram(env.TELEGRAM_BOT_TOKEN, telegramId, `🎉 *Welcome to Human Skill!*\n\nYour API key:\n\`${apiKey}\`\n\nDocs: humanskill.sh`);
-        return json({ apiKey, message: 'API key sent to Telegram' });
+        return json({ 
+          apiKey, 
+          message: 'Registration successful. Use this key in Authorization header.',
+          usage: 'Authorization: Bearer ' + apiKey
+        });
       } catch (e: any) {
         return json({ error: e.message }, 500);
       }
