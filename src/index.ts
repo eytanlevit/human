@@ -167,9 +167,56 @@ description: Get help from a human (Eytan) when you're stuck, need verification,
 
 Ask a human questions and get their responses. Currently answered by Eytan (@eytanlevit).
 
-⚠️ **This is an async API.** Expect wait times of 10 seconds to several minutes. Poll every 5-10 seconds. Inform your user you're waiting.
+⚠️ **This is an async API.** Humans take time to respond (seconds to minutes).
 
-## Step 1: Register (one time)
+---
+
+## OpenClaw Agents (Recommended)
+
+If you have \`sessions_spawn\`, use it to avoid blocking your user with polling spam:
+
+### Step 1: Register (one time)
+\`\`\`bash
+curl -X POST https://humanskill.sh/v1/auth/register \\
+  -H "Content-Type: application/json" \\
+  -d '{"name": "YOUR_AGENT_NAME", "twitter": "OWNER_TWITTER_HANDLE"}'
+\`\`\`
+
+Save the returned \`apiKey\` permanently.
+
+### Step 2: Ask + Spawn Background Waiter
+\`\`\`javascript
+// 1. Submit question
+const res = await fetch('https://humanskill.sh/v1/ask', {
+  method: 'POST',
+  headers: { 
+    'Authorization': 'Bearer YOUR_API_KEY',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({ prompt: 'Your question here' })
+});
+const { requestId } = await res.json();
+
+// 2. Tell your user
+"I've asked a human. I'll let you know when they respond."
+
+// 3. Spawn background waiter (don't block!)
+sessions_spawn({
+  task: \`Poll https://humanskill.sh/v1/wait/\${requestId}?timeout=30 in a loop until status is "completed". Use the /v1/wait endpoint which long-polls for up to 30s per request. When you get a completed response, report: "Human responded: [their response]". Give up after 10 minutes total.\`,
+  label: "human-skill-waiter",
+  runTimeoutSeconds: 660  // 11 min max
+});
+
+// 4. Return immediately - no blocking!
+\`\`\`
+
+The background sub-agent will announce the human's response to your chat when it arrives.
+
+---
+
+## Standard API (All Agents)
+
+### Step 1: Register (one time)
 
 \`\`\`bash
 curl -X POST https://humanskill.sh/v1/auth/register \\
@@ -182,9 +229,9 @@ Response:
 {"apiKey": "hsk_...", "message": "Registration successful"}
 \`\`\`
 
-**Save this API key permanently** - store it in your environment or config. You only need to register once.
+**Save this API key permanently.**
 
-## Step 2: Ask a Human
+### Step 2: Ask a Human
 
 \`\`\`bash
 curl -X POST https://humanskill.sh/v1/ask \\
@@ -198,10 +245,14 @@ Response:
 {"requestId": "abc123", "status": "pending"}
 \`\`\`
 
-## Step 3: Poll for Response
+### Step 3: Wait for Response
 
-Poll every 5-10 seconds until status is "completed". **Do not give up quickly** - humans may take minutes to respond.
+**Option A: Long-poll (recommended)** - waits up to 30s per request:
+\`\`\`bash
+curl "https://humanskill.sh/v1/wait/REQUEST_ID?timeout=30"
+\`\`\`
 
+**Option B: Quick poll** - returns immediately:
 \`\`\`bash
 curl https://humanskill.sh/v1/status/REQUEST_ID
 \`\`\`
@@ -216,54 +267,17 @@ Response (completed):
 {"requestId": "abc123", "status": "completed", "response": "The human's answer"}
 \`\`\`
 
-**Polling strategy:**
-- Poll every 5-10 seconds
+### Polling Strategy
+- Use \`/v1/wait\` with 30s timeout (fewer requests)
+- Loop until status is "completed"
 - Continue for at least 5 minutes before giving up
-- Inform your user that you're waiting for a human
+- Inform your user you're waiting for a human
 
 ## Error Responses
 
-401 Unauthorized:
-\`\`\`json
-{"error": "Missing API key. Register at POST /v1/auth/register"}
-\`\`\`
-
-400 Bad Request:
-\`\`\`json
-{"error": "Missing prompt"}
-\`\`\`
-
-404 Not Found:
-\`\`\`json
-{"error": "Request not found"}
-\`\`\`
-
-## Complete Example
-
-\`\`\`bash
-# 1. Register (once)
-API_KEY=$(curl -s -X POST https://humanskill.sh/v1/auth/register \\
-  -H "Content-Type: application/json" \\
-  -d '{"name": "MyAgent", "twitter": "myhandle"}' | jq -r '.apiKey')
-
-# 2. Ask a question
-REQUEST_ID=$(curl -s -X POST https://humanskill.sh/v1/ask \\
-  -H "Authorization: Bearer $API_KEY" \\
-  -H "Content-Type: application/json" \\
-  -d '{"prompt": "Should I proceed with the deployment?"}' | jq -r '.requestId')
-
-# 3. Poll until completed
-while true; do
-  RESPONSE=$(curl -s https://humanskill.sh/v1/status/$REQUEST_ID)
-  STATUS=$(echo $RESPONSE | jq -r '.status')
-  if [ "$STATUS" = "completed" ]; then
-    echo "Human said: $(echo $RESPONSE | jq -r '.response')"
-    break
-  fi
-  echo "Waiting for human..."
-  sleep 10
-done
-\`\`\`
+- \`401\`: Invalid/missing API key
+- \`400\`: Missing required field
+- \`404\`: Request not found
 
 ## When to Use
 
@@ -433,7 +447,7 @@ export default {
     }
 
     // GET /v1/status/:id
-    if (path.startsWith('/v1/status/') && request.method === 'GET') {
+    if (path.startsWith('/v1/status/') && !path.includes('/wait/') && request.method === 'GET') {
       const reqId = path.split('/').pop();
       if (!reqId) return json({ error: 'Missing request ID' }, 400);
 
@@ -443,6 +457,50 @@ export default {
       return json({
         requestId: reqData.id, status: reqData.status, response: reqData.response,
         createdAt: reqData.createdAt, respondedAt: reqData.respondedAt,
+      });
+    }
+
+    // GET /v1/wait/:id - Long-polling endpoint (waits up to 30s for response)
+    if (path.startsWith('/v1/wait/') && request.method === 'GET') {
+      const reqId = path.split('/').pop();
+      if (!reqId) return json({ error: 'Missing request ID' }, 400);
+
+      const timeoutParam = url.searchParams.get('timeout');
+      const maxWait = Math.min(parseInt(timeoutParam || '30', 10), 30) * 1000; // Max 30s
+      const pollInterval = 2000; // Check every 2s
+      const startTime = Date.now();
+
+      // Initial check
+      let reqData = await env.REQUESTS.get(`request:${reqId}`, 'json') as HumanRequest | null;
+      if (!reqData) return json({ error: 'Request not found' }, 404);
+
+      // If already completed, return immediately
+      if (reqData.status === 'completed') {
+        return json({
+          requestId: reqData.id, status: reqData.status, response: reqData.response,
+          createdAt: reqData.createdAt, respondedAt: reqData.respondedAt,
+        });
+      }
+
+      // Long-poll: wait until completed or timeout
+      while (Date.now() - startTime < maxWait) {
+        await new Promise(resolve => setTimeout(resolve, pollInterval));
+        
+        reqData = await env.REQUESTS.get(`request:${reqId}`, 'json') as HumanRequest | null;
+        if (!reqData) return json({ error: 'Request not found' }, 404);
+        
+        if (reqData.status === 'completed') {
+          return json({
+            requestId: reqData.id, status: reqData.status, response: reqData.response,
+            createdAt: reqData.createdAt, respondedAt: reqData.respondedAt,
+          });
+        }
+      }
+
+      // Timeout - return pending status
+      return json({
+        requestId: reqData.id, status: 'pending', 
+        createdAt: reqData.createdAt, waitedMs: Date.now() - startTime,
       });
     }
 
