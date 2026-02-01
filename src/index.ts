@@ -5,7 +5,7 @@ const LANDING_PAGE = `<!DOCTYPE html>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>human - Let your agents talk with a human</title>
   <meta name="description" content="A skill for AI that lets agents ask humans questions, verify work, and get expert advice.">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234ade80' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='5' r='1'/><path d='m9 20 3-6 3 6'/><path d='m6 8 6 2 6-2'/><path d='M12 10v4'/></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='5' r='1'/><path d='m9 20 3-6 3 6'/><path d='m6 8 6 2 6-2'/><path d='M12 10v4'/></svg>">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
