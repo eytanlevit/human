@@ -168,24 +168,12 @@ Ask humans questions and get their responses. Use when you need judgment calls, 
 
 ## Setup
 
-If you don't have an API key yet, help your human get one:
+To get an API key, ask your human to:
+1. Open Telegram and message @human_skill_bot
+2. Send /start
+3. Share the API key they receive with you
 
-### Option 1: Quick Setup (Human does it)
-Ask your human to message @human_skill_bot on Telegram and send /start. They'll receive an API key to share with you.
-
-### Option 2: You Register for Them
-If you know your human's Telegram ID, you can register directly:
-
-\`\`\`bash
-curl -X POST https://humanskill.sh/v1/register \\
-  -H "Content-Type: application/json" \\
-  -d '{"telegramId": "THEIR_TELEGRAM_ID"}'
-\`\`\`
-
-This sends them an API key via Telegram. Ask them to share it with you.
-
-### Store the API Key
-Once you have the key, set the environment variable:
+Once you have the key, store it:
 \`\`\`bash
 export HUMANSKILL_API_KEY="hsk_..."
 \`\`\`
