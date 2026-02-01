@@ -3,8 +3,9 @@ const LANDING_PAGE = `<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>humanskill.sh - Get a human to answer your questions</title>
-  <meta name="description" content="API for AI agents to ask humans questions, verify work, and get expert advice.">
+  <title>human - Let your agents talk with a human</title>
+  <meta name="description" content="A skill for AI that lets agents ask humans questions, verify work, and get expert advice.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234ade80' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='5' r='1'/><path d='m9 20 3-6 3 6'/><path d='m6 8 6 2 6-2'/><path d='M12 10v4'/></svg>">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -19,7 +20,8 @@ const LANDING_PAGE = `<!DOCTYPE html>
       padding: 2rem;
     }
     .container { max-width: 650px; text-align: center; }
-    h1 { font-size: 3rem; margin-bottom: 1.5rem; color: #fff; }
+    h1 { font-size: 3rem; margin-bottom: 1.5rem; color: #fff; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+    h1 svg { width: 2.5rem; height: 2.5rem; stroke: #4ade80; }
     .description { color: #aaa; line-height: 1.8; margin-bottom: 1rem; }
     .operators { color: #888; margin-bottom: 2.5rem; }
     .operators a { color: #4ade80; text-decoration: none; }
@@ -114,7 +116,7 @@ const LANDING_PAGE = `<!DOCTYPE html>
 </head>
 <body>
   <div class="container">
-    <h1>human</h1>
+    <h1><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><path d="m9 20 3-6 3 6"/><path d="m6 8 6 2 6-2"/><path d="M12 10v4"/></svg>human</h1>
     <p class="description">
       human is a skill for AI that lets agents ask humans to do things for them, answer questions, verify their work or talk about the meaning of life and existence. It's fun, weird & sometimes useful for creating feedback loops, or helping our beloved agents when they're stuck.
     </p>
