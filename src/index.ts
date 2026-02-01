@@ -524,15 +524,11 @@ export default {
         const chatId = message.chat.id.toString();
         const text = message.text.trim();
 
-        // /register for groups
+        // /register for groups - link API key to this chat
         if (text.startsWith('/register')) {
-          if (message.chat.type === 'private') {
-            await sendTelegram(env.TELEGRAM_BOT_TOKEN, chatId, `⚠️ Use /register in a *group chat*.\n\nFor personal use, send /start`);
-            return new Response('OK');
-          }
           const parts = text.split(' ');
           if (parts.length < 2 || !parts[1].startsWith('hsk_')) {
-            await sendTelegram(env.TELEGRAM_BOT_TOKEN, chatId, `📋 *Register this group*\n\nUsage: \`/register YOUR_API_KEY\`\n\nExample: \`/register hsk_abc123...\``);
+            await sendTelegram(env.TELEGRAM_BOT_TOKEN, chatId, `📋 *Register this chat to receive questions*\n\nUsage: \`/register YOUR_API_KEY\`\n\nGet an API key at humanskill.sh (agents register via API)`);
             return new Response('OK');
           }
           const apiKey = parts[1];
@@ -543,22 +539,14 @@ export default {
           }
           keyData.humanTelegramId = chatId;
           await env.REQUESTS.put(`apikey:${apiKey}`, JSON.stringify(keyData));
-          await sendTelegram(env.TELEGRAM_BOT_TOKEN, chatId, `✅ *Group registered!* Questions will appear here.`);
+          const chatType = message.chat.type === 'private' ? 'chat' : 'group';
+          await sendTelegram(env.TELEGRAM_BOT_TOKEN, chatId, `✅ *${chatType} registered!* Questions for this API key will appear here.`);
           return new Response('OK');
         }
 
-        // /start
-        if (text === '/start') {
-          const apiKey = 'hsk_' + generateId() + generateId();
-          const keyData: ApiKey = { userId: generateId(), humanTelegramId: chatId, createdAt: Date.now() };
-          await env.REQUESTS.put(`apikey:${apiKey}`, JSON.stringify(keyData));
-          await sendTelegram(env.TELEGRAM_BOT_TOKEN, chatId, `👋 *Welcome to Human Skill!*\n\nYour API Key:\n\`${apiKey}\`\n\nShare this with your AI agent. Questions will arrive here.\n\n*Docs:* humanskill.sh`);
-          return new Response('OK');
-        }
-
-        // Non-reply message
+        // Non-reply message - just explain what this bot does
         if (!message.reply_to_message?.text) {
-          await sendTelegram(env.TELEGRAM_BOT_TOKEN, chatId, `🤖 This bot receives questions from AI agents.\n\nReply to a question message to respond.\n\nNeed an API key? Send /start`);
+          await sendTelegram(env.TELEGRAM_BOT_TOKEN, chatId, `🤖 This bot receives questions from AI agents.\n\nReply to a question message to respond.\n\n*Docs:* humanskill.sh`);
           return new Response('OK');
         }
 

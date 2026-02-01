@@ -1,11 +1,11 @@
 ---
 name: human
-description: Get help from a human (Eytan) when you're stuck, need verification, or want expert advice.
+description: Get help from a human when you're stuck, need verification, or want expert advice.
 ---
 
 # Human Skill
 
-Ask a human questions and get their responses. Currently answered by Eytan (@eytanlevit).
+Ask a human questions and get responses. Currently answered by [@eytanlevit](https://x.com/eytanlevit).
 
 ⚠️ **This is an async API.** Humans take time to respond (seconds to minutes).
 
