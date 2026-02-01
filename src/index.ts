@@ -398,15 +398,20 @@ export default {
         if (!prompt) return json({ error: 'Missing prompt' }, 400);
 
         const reqId = generateId();
+        // Route to the API key owner's chat if set, otherwise fallback to default group
+        const targetChat = keyData.humanTelegramId || EYTAN_CHAT_ID;
         const reqData: HumanRequest = {
           id: reqId, type: 'ask', prompt,
-          humanId: EYTAN_CHAT_ID, status: 'pending', createdAt: Date.now(),
+          humanId: targetChat, status: 'pending', createdAt: Date.now(),
         };
 
         await env.REQUESTS.put(`request:${reqId}`, JSON.stringify(reqData), { expirationTtl: 86400 });
 
-        const message = `🤖 *Human Skill Request*\n\nFrom: *${keyData.agentName}* (${keyData.ownerTwitter})\n\n${prompt}\n\n_Reply to this message to respond._\n\n\`ID: ${reqId}\``;
-        const sent = await sendTelegram(env.TELEGRAM_BOT_TOKEN, EYTAN_CHAT_ID, message);
+        // Build "From" line - handle both /start keys and /v1/auth/register keys
+        const fromName = keyData.agentName || 'Agent';
+        const fromOwner = keyData.ownerTwitter || (keyData.userId ? `user:${keyData.userId.slice(0,8)}` : 'unknown');
+        const message = `🤖 *Human Skill Request*\n\nFrom: *${fromName}* (${fromOwner})\n\n${prompt}\n\n_Reply to this message to respond._\n\n\`ID: ${reqId}\``;
+        const sent = await sendTelegram(env.TELEGRAM_BOT_TOKEN, targetChat, message);
         if (!sent) return json({ error: 'Failed to reach human' }, 500);
 
         return json({ requestId: reqId, status: 'pending', pollUrl: `https://humanskill.sh/v1/status/${reqId}` });
@@ -429,15 +434,20 @@ export default {
         if (!expected || !actual) return json({ error: 'Missing expected or actual' }, 400);
 
         const reqId = generateId();
+        // Route to the API key owner's chat if set, otherwise fallback to default group
+        const targetChat = keyData.humanTelegramId || EYTAN_CHAT_ID;
         const reqData: HumanRequest = {
           id: reqId, type: 'verify', prompt: context || 'Please verify',
-          expected, actual, humanId: EYTAN_CHAT_ID, status: 'pending', createdAt: Date.now(),
+          expected, actual, humanId: targetChat, status: 'pending', createdAt: Date.now(),
         };
 
         await env.REQUESTS.put(`request:${reqId}`, JSON.stringify(reqData), { expirationTtl: 86400 });
 
-        const message = `🔍 *Verification Request*\n\nFrom: *${keyData.agentName}* (${keyData.ownerTwitter})\n\n${context || 'Please verify:'}\n\n*Expected:*\n\`\`\`\n${expected}\n\`\`\`\n\n*Actual:*\n\`\`\`\n${actual}\n\`\`\`\n\n_Reply ✅ to confirm, ❌ to reject, or explain._\n\n\`ID: ${reqId}\``;
-        const sent = await sendTelegram(env.TELEGRAM_BOT_TOKEN, EYTAN_CHAT_ID, message);
+        // Build "From" line - handle both /start keys and /v1/auth/register keys
+        const fromName = keyData.agentName || 'Agent';
+        const fromOwner = keyData.ownerTwitter || (keyData.userId ? `user:${keyData.userId.slice(0,8)}` : 'unknown');
+        const message = `🔍 *Verification Request*\n\nFrom: *${fromName}* (${fromOwner})\n\n${context || 'Please verify:'}\n\n*Expected:*\n\`\`\`\n${expected}\n\`\`\`\n\n*Actual:*\n\`\`\`\n${actual}\n\`\`\`\n\n_Reply ✅ to confirm, ❌ to reject, or explain._\n\n\`ID: ${reqId}\``;
+        const sent = await sendTelegram(env.TELEGRAM_BOT_TOKEN, targetChat, message);
         if (!sent) return json({ error: 'Failed to reach human' }, 500);
 
         return json({ requestId: reqId, status: 'pending', pollUrl: `https://humanskill.sh/v1/status/${reqId}` });
