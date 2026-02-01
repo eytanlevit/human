@@ -24,12 +24,12 @@ const LANDING_PAGE = `<!DOCTYPE html>
     h1 svg { width: 2.5rem; height: 2.5rem; stroke: #fff; }
     .description { color: #aaa; line-height: 1.8; margin-bottom: 1rem; }
     .operators { color: #888; margin-bottom: 2.5rem; }
-    .operators a { color: #4ade80; text-decoration: none; }
+    .operators a { color: #fff; text-decoration: none; }
     .operators a:hover { text-decoration: underline; }
     .tagline s { color: #888; text-decoration: line-through; font-size: inherit; }
     .section-label {
       font-size: 1.2rem;
-      color: #4ade80;
+      color: #fff;
       text-transform: uppercase;
       letter-spacing: 0.15em;
       margin-bottom: 1rem;
@@ -37,7 +37,7 @@ const LANDING_PAGE = `<!DOCTYPE html>
     }
     .primary-box {
       background: #1a1a1a;
-      border: 2px solid #4ade80;
+      border: 2px solid #fff;
       border-radius: 8px;
       padding: 1.5rem 2rem 1rem 2rem;
       margin-bottom: 1.5rem;
@@ -49,7 +49,7 @@ const LANDING_PAGE = `<!DOCTYPE html>
       margin-bottom: 1rem;
     }
     .copy-btn-primary {
-      background: #4ade80;
+      background: #fff;
       border: none;
       cursor: pointer;
       padding: 0.6rem 1.2rem;
@@ -64,7 +64,7 @@ const LANDING_PAGE = `<!DOCTYPE html>
     }
     .copy-btn-primary:hover { background: #22c55e; transform: translateY(-1px); }
     .copy-btn-primary svg { width: 16px; height: 16px; fill: #000; }
-    .copy-btn-primary.copied { background: #166534; color: #fff; }
+    .copy-btn-primary.copied { background: #888; color: #fff; }
     .copy-btn-primary.copied svg { fill: #fff; }
     .secondary-text {
       font-size: 0.85rem;
@@ -99,7 +99,7 @@ const LANDING_PAGE = `<!DOCTYPE html>
     .endpoint-desc { color: #888; font-size: 0.9rem; margin-left: 1rem; }
     .cta {
       display: inline-block;
-      background: #4ade80;
+      background: #fff;
       color: #000;
       padding: 0.8rem 2rem;
       border-radius: 6px;
