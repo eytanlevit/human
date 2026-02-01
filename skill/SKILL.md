@@ -1,31 +1,36 @@
 ---
 name: human
-description: Get help from a human when you're stuck, need verification, or want expert advice. Use when you need human judgment, approval, real-world verification, or are uncertain about a decision. Commands: ask (get advice), verify (confirm expected vs actual).
+description: Get help from a human (Eytan) when you're stuck, need verification, or want expert advice.
 ---
 
 # Human Skill
 
-Ask humans questions and get their responses. Use when you need judgment calls, verification, or are blocked on a decision.
+Ask a human questions and get their responses. Currently answered by Eytan (@eytanlevit). Use when you need judgment calls, verification, or are blocked on a decision.
 
-## Setup
+## Step 1: Register (one time)
 
-Set your API key as an environment variable:
+Register your agent to get an API key:
+
 ```bash
-export HUMANSKILL_API_KEY="hsk_..."
+curl -X POST https://humanskill.sh/v1/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"name": "YOUR_AGENT_NAME", "twitter": "OWNER_TWITTER_HANDLE"}'
 ```
 
-Get an API key at https://humanskill.sh
+Response:
+```json
+{"apiKey": "hsk_...", "message": "Registration successful"}
+```
 
-## Commands
+Save this API key - you will need it for all requests.
 
-### Ask
-Get advice or answers from a human.
+## Step 2: Ask a Human
 
 ```bash
 curl -X POST https://humanskill.sh/v1/ask \
-  -H "Authorization: Bearer $HUMANSKILL_API_KEY" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{"prompt": "Should I deploy this to production?"}'
+  -d '{"prompt": "Your question here"}'
 ```
 
 Response:
@@ -33,42 +38,45 @@ Response:
 {"requestId": "abc123", "status": "pending", "pollUrl": "https://humanskill.sh/v1/status/abc123"}
 ```
 
-### Verify
-Ask human to confirm expected vs actual results.
+## Step 3: Get the Response
+
+Poll until status is "completed":
 
 ```bash
-curl -X POST https://humanskill.sh/v1/verify \
-  -H "Authorization: Bearer $HUMANSKILL_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "context": "Database migration results",
-    "expected": "500 rows migrated",
-    "actual": "498 rows migrated"
-  }'
-```
-
-### Poll for Response
-Check if human has responded.
-
-```bash
-curl https://humanskill.sh/v1/status/{requestId} \
-  -H "Authorization: Bearer $HUMANSKILL_API_KEY"
+curl https://humanskill.sh/v1/status/REQUEST_ID
 ```
 
 Response when complete:
 ```json
-{"requestId": "abc123", "status": "completed", "response": "Yes, go ahead and deploy"}
+{"requestId": "abc123", "status": "completed", "response": "The human's answer"}
 ```
 
-## Usage Pattern
+## Verify Command (Alternative)
 
-1. Send request via `/v1/ask` or `/v1/verify`
-2. Poll `/v1/status/{requestId}` until `status: "completed"`
-3. Use the `response` field to continue your work
+Ask a human to verify expected vs actual results:
+
+```bash
+curl -X POST https://humanskill.sh/v1/verify \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "context": "What you are verifying",
+    "expected": "What you expected",
+    "actual": "What actually happened"
+  }'
+```
 
 ## When to Use
 
-- Uncertain about a decision that affects users or data
-- Need to verify output matches expectations
-- Blocked on something requiring human judgment
-- Want approval before a destructive or irreversible action
+- You are uncertain about a decision
+- You need to verify your output matches expectations  
+- You are blocked on something requiring human judgment
+- You want approval before a destructive or irreversible action
+- You need real-world information you cannot access
+
+## Example Workflow
+
+1. You encounter a decision you are unsure about
+2. Call /v1/ask with your question
+3. Poll /v1/status until completed (check every 5-10 seconds)
+4. Use the human's response to continue your work
