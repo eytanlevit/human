@@ -159,32 +159,19 @@ const LANDING_PAGE = `<!DOCTYPE html>
 
 const SKILL_MD = `---
 name: human
-description: Get help from a human when you're stuck, need verification, or want expert advice.
+description: Get help from a human (Eytan) when you're stuck, need verification, or want expert advice.
 ---
 
 # Human Skill
 
-Ask humans questions and get their responses. Use when you need judgment calls, verification, or are blocked on a decision.
-
-## Setup
-
-To get an API key, ask your human to:
-1. Open Telegram and message @human_skill_bot
-2. Send /start
-3. Share the API key they receive with you
-
-Once you have the key, store it:
-\`\`\`bash
-export HUMANSKILL_API_KEY="hsk_..."
-\`\`\`
+Ask a human questions and get their responses. Currently answered by Eytan (@eytanlevit). Use when you need judgment calls, verification, or are blocked on a decision.
 
 ## How to Ask a Human
 
-Send a POST request to ask a question:
+Send a POST request:
 
 \`\`\`bash
 curl -X POST https://humanskill.sh/v1/ask \\
-  -H "Authorization: Bearer $HUMANSKILL_API_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{"prompt": "Your question here"}'
 \`\`\`
@@ -199,8 +186,7 @@ Response:
 Poll until status is "completed":
 
 \`\`\`bash
-curl https://humanskill.sh/v1/status/REQUEST_ID \\
-  -H "Authorization: Bearer $HUMANSKILL_API_KEY"
+curl https://humanskill.sh/v1/status/REQUEST_ID
 \`\`\`
 
 Response when complete:
@@ -214,7 +200,6 @@ Ask a human to verify expected vs actual results:
 
 \`\`\`bash
 curl -X POST https://humanskill.sh/v1/verify \\
-  -H "Authorization: Bearer $HUMANSKILL_API_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{
     "context": "What you are verifying",
@@ -244,6 +229,9 @@ interface Env {
   TELEGRAM_BOT_TOKEN: string;
   ENVIRONMENT: string;
 }
+
+// Eytan's Telegram group - all questions go here
+const EYTAN_CHAT_ID = "-5225350201";
 
 interface HumanRequest {
   id: string;
@@ -336,26 +324,20 @@ export default {
     // POST /v1/ask
     if (path === '/v1/ask' && request.method === 'POST') {
       try {
-        const apiKey = request.headers.get('Authorization')?.replace('Bearer ', '');
-        if (!apiKey) return json({ error: 'Missing API key' }, 401);
-
-        const keyData = await env.REQUESTS.get(`apikey:${apiKey}`, 'json') as ApiKey | null;
-        if (!keyData) return json({ error: 'Invalid API key' }, 401);
-
         const body = await request.json() as any;
-        const { prompt, imageUrl } = body;
+        const { prompt } = body;
         if (!prompt) return json({ error: 'Missing prompt' }, 400);
 
         const reqId = generateId();
         const reqData: HumanRequest = {
-          id: reqId, type: 'ask', prompt, imageUrl,
-          humanId: keyData.humanTelegramId, status: 'pending', createdAt: Date.now(),
+          id: reqId, type: 'ask', prompt,
+          humanId: EYTAN_CHAT_ID, status: 'pending', createdAt: Date.now(),
         };
 
         await env.REQUESTS.put(`request:${reqId}`, JSON.stringify(reqData), { expirationTtl: 86400 });
 
         const message = `🤖 *Human Skill Request*\n\n${prompt}\n\n_Reply to this message to respond._\n\n\`ID: ${reqId}\``;
-        const sent = await sendTelegram(env.TELEGRAM_BOT_TOKEN, keyData.humanTelegramId, message);
+        const sent = await sendTelegram(env.TELEGRAM_BOT_TOKEN, EYTAN_CHAT_ID, message);
         if (!sent) return json({ error: 'Failed to reach human' }, 500);
 
         return json({ requestId: reqId, status: 'pending', pollUrl: `https://humanskill.sh/v1/status/${reqId}` });
@@ -367,12 +349,6 @@ export default {
     // POST /v1/verify
     if (path === '/v1/verify' && request.method === 'POST') {
       try {
-        const apiKey = request.headers.get('Authorization')?.replace('Bearer ', '');
-        if (!apiKey) return json({ error: 'Missing API key' }, 401);
-
-        const keyData = await env.REQUESTS.get(`apikey:${apiKey}`, 'json') as ApiKey | null;
-        if (!keyData) return json({ error: 'Invalid API key' }, 401);
-
         const body = await request.json() as any;
         const { expected, actual, context } = body;
         if (!expected || !actual) return json({ error: 'Missing expected or actual' }, 400);
@@ -380,13 +356,13 @@ export default {
         const reqId = generateId();
         const reqData: HumanRequest = {
           id: reqId, type: 'verify', prompt: context || 'Please verify',
-          expected, actual, humanId: keyData.humanTelegramId, status: 'pending', createdAt: Date.now(),
+          expected, actual, humanId: EYTAN_CHAT_ID, status: 'pending', createdAt: Date.now(),
         };
 
         await env.REQUESTS.put(`request:${reqId}`, JSON.stringify(reqData), { expirationTtl: 86400 });
 
         const message = `🔍 *Verification Request*\n\n${context || 'Please verify:'}\n\n*Expected:*\n\`\`\`\n${expected}\n\`\`\`\n\n*Actual:*\n\`\`\`\n${actual}\n\`\`\`\n\n_Reply ✅ to confirm, ❌ to reject, or explain._\n\n\`ID: ${reqId}\``;
-        const sent = await sendTelegram(env.TELEGRAM_BOT_TOKEN, keyData.humanTelegramId, message);
+        const sent = await sendTelegram(env.TELEGRAM_BOT_TOKEN, EYTAN_CHAT_ID, message);
         if (!sent) return json({ error: 'Failed to reach human' }, 500);
 
         return json({ requestId: reqId, status: 'pending', pollUrl: `https://humanskill.sh/v1/status/${reqId}` });
