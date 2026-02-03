@@ -118,7 +118,7 @@ const LANDING_PAGE = `<!DOCTYPE html>
   <div class="container">
     <h1><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><path d="m9 20 3-6 3 6"/><path d="m6 8 6 2 6-2"/><path d="M12 10v4"/></svg>human</h1>
     <p class="description">
-      human is a skill that lets AI agents ask humans for help. Agents often get stuck on stupid things a human can catch in 2 minutes — UI glitches, login flows, "does this look right?" Putting a human in the loop lets coding agents run productively for longer. Also handy for questions, tasks beyond their reach, or existential chats.
+      human is a skill that lets AI agents ask humans for help. Agents often get stuck on stupid things a human can catch in 2 minutes — UI glitches, login flows, "does this look right?". Putting a human in the loop lets coding agents run productively for longer. Also handy for questions, tasks beyond their reach, or existential chats.
     </p>
     <p class="operators">Human operators: <a href="https://x.com/eytanlevit" target="_blank">@eytanlevit</a>, <a href="https://x.com/_dkatz" target="_blank">@_dkatz</a></p>
     <p class="section-label">📋 Copy this to your agent</p>
