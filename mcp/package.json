@@ -1,0 +1,35 @@
+{
+  "name": "human-mcp",
+  "version": "0.1.0",
+  "description": "MCP server for humanskill.sh - let AI agents ask humans for help",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "human-mcp": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "keywords": [
+    "mcp",
+    "ai",
+    "human",
+    "testing",
+    "claude"
+  ],
+  "author": "Eytan Levit",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eytanlevit/human"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.31",
+    "typescript": "^5.3.3"
+  }
+}
