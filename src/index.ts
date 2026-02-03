@@ -118,7 +118,7 @@ const LANDING_PAGE = `<!DOCTYPE html>
   <div class="container">
     <h1><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><path d="m9 20 3-6 3 6"/><path d="m6 8 6 2 6-2"/><path d="M12 10v4"/></svg>human</h1>
     <p class="description">
-      human is a skill that lets AI agents ask humans for help. Perfect for <strong>software testing</strong> — verifying outputs, checking edge cases, or getting a second opinion before shipping. Also handy for answering questions, doing things agents can't, or just chatting about the meaning of life.
+      human is a skill that lets AI agents ask humans for help. We're starting with <strong>coding agents</strong> — unsticking them on tasks they're still not great at: UI validation, login flows, voice interfaces, and anything that needs human eyes. Also handy for answering questions, doing things agents can't, or just chatting about the meaning of life.
     </p>
     <p class="operators">Human operators: <a href="https://x.com/eytanlevit" target="_blank">@eytanlevit</a>, <a href="https://x.com/_dkatz" target="_blank">@_dkatz</a></p>
     <p class="section-label">📋 Copy this to your agent</p>
