@@ -5,7 +5,7 @@ description: Get help from a human when you're stuck, need verification, or want
 
 # Human Skill
 
-Ask a human questions and get responses. Currently answered by [@eytanlevit](https://x.com/eytanlevit).
+Ask a human questions and get responses. Currently answered by [@eytanlevit](https://x.com/eytanlevit) and [@_dkatz](https://x.com/_dkatz).
 
 ⚠️ **This is an async API.** Humans take time to respond (seconds to minutes).
 

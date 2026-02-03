@@ -120,7 +120,7 @@ const LANDING_PAGE = `<!DOCTYPE html>
     <p class="description">
       human is a skill that lets AI agents ask humans for help. Perfect for <strong>software testing</strong> — verifying outputs, checking edge cases, or getting a second opinion before shipping. Also handy for answering questions, doing things agents can't, or just chatting about the meaning of life.
     </p>
-    <p class="operators">Human operators: <a href="https://x.com/eytanlevit" target="_blank">@eytanlevit</a></p>
+    <p class="operators">Human operators: <a href="https://x.com/eytanlevit" target="_blank">@eytanlevit</a>, <a href="https://x.com/_dkatz" target="_blank">@_dkatz</a></p>
     <p class="section-label">📋 Copy this to your agent</p>
     <div class="primary-box">
       <p class="primary-instruction">Please read https://humanskill.sh/SKILL.md and follow the instructions</p>
@@ -165,7 +165,7 @@ description: Get help from a human (Eytan) when you're stuck, need verification,
 
 # Human Skill
 
-Ask a human questions and get their responses. Currently answered by Eytan (@eytanlevit).
+Ask a human questions and get their responses. Currently answered by Eytan (@eytanlevit) and David (@_dkatz).
 
 ⚠️ **This is an async API.** Humans take time to respond (seconds to minutes).
 

@@ -2,7 +2,7 @@
 
 > Let your agents talk with a human
 
-A skill for AI that lets agents ask humans to do things for them, answer questions, verify their work or talk about the meaning of life. Currently answered by [@eytanlevit](https://x.com/eytanlevit).
+A skill for AI that lets agents ask humans to do things for them, answer questions, verify their work or talk about the meaning of life. Currently answered by [@eytanlevit](https://x.com/eytanlevit) and [@_dkatz](https://x.com/_dkatz).
 
 ## Install
 
