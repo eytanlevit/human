@@ -279,12 +279,28 @@ Response (completed):
 - \`400\`: Missing required field
 - \`404\`: Request not found
 
+## POST /v1/test - Request Human Testing
+
+For UI/flow testing (MCP-compatible format):
+
+\`\`\`bash
+curl -X POST https://humanskill.sh/v1/test \\
+  -H "Authorization: Bearer YOUR_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "what_to_test": "User signup flow",
+    "link": "https://staging.app.com/signup",
+    "expected_behavior": "User can enter email, get verification code, complete signup"
+  }'
+\`\`\`
+
 ## When to Use
 
 - You are uncertain about a decision
 - You need to verify your output matches expectations  
 - You are blocked on something requiring human judgment
 - You want approval before a destructive action
+- You built something and need a human to test it
 `;
 
 interface Env {
@@ -298,11 +314,14 @@ const EYTAN_CHAT_ID = "-5225350201";
 
 interface HumanRequest {
   id: string;
-  type: 'ask' | 'verify';
+  type: 'ask' | 'verify' | 'test';
   prompt: string;
   imageUrl?: string;
   expected?: string;
   actual?: string;
+  whatToTest?: string;
+  link?: string;
+  expectedBehavior?: string;
   humanId: string;
   status: 'pending' | 'completed';
   response?: string;
@@ -447,6 +466,43 @@ export default {
         const fromName = keyData.agentName || 'Agent';
         const fromOwner = keyData.ownerTwitter || (keyData.userId ? `user:${keyData.userId.slice(0,8)}` : 'unknown');
         const message = `🔍 *Verification Request*\n\nFrom: *${fromName}* (${fromOwner})\n\n${context || 'Please verify:'}\n\n*Expected:*\n\`\`\`\n${expected}\n\`\`\`\n\n*Actual:*\n\`\`\`\n${actual}\n\`\`\`\n\n_Reply ✅ to confirm, ❌ to reject, or explain._\n\n\`ID: ${reqId}\``;
+        const sent = await sendTelegram(env.TELEGRAM_BOT_TOKEN, targetChat, message);
+        if (!sent) return json({ error: 'Failed to reach human' }, 500);
+
+        return json({ requestId: reqId, status: 'pending', pollUrl: `https://humanskill.sh/v1/status/${reqId}` });
+      } catch (e: any) {
+        return json({ error: e.message }, 500);
+      }
+    }
+
+    // POST /v1/test - Request human testing (MCP-compatible format)
+    if (path === '/v1/test' && request.method === 'POST') {
+      try {
+        const apiKey = request.headers.get('Authorization')?.replace('Bearer ', '');
+        if (!apiKey) return json({ error: 'Missing API key. Register at POST /v1/auth/register' }, 401);
+
+        const keyData = await env.REQUESTS.get(`apikey:${apiKey}`, 'json') as ApiKey | null;
+        if (!keyData) return json({ error: 'Invalid API key. Register at POST /v1/auth/register' }, 401);
+
+        const body = await request.json() as any;
+        const { what_to_test, link, expected_behavior } = body;
+        if (!what_to_test) return json({ error: 'Missing what_to_test' }, 400);
+        if (!link) return json({ error: 'Missing link' }, 400);
+        if (!expected_behavior) return json({ error: 'Missing expected_behavior' }, 400);
+
+        const reqId = generateId();
+        const targetChat = keyData.humanTelegramId || EYTAN_CHAT_ID;
+        const reqData: HumanRequest = {
+          id: reqId, type: 'test', prompt: what_to_test,
+          whatToTest: what_to_test, link, expectedBehavior: expected_behavior,
+          humanId: targetChat, status: 'pending', createdAt: Date.now(),
+        };
+
+        await env.REQUESTS.put(`request:${reqId}`, JSON.stringify(reqData), { expirationTtl: 86400 });
+
+        const fromName = keyData.agentName || 'Agent';
+        const fromOwner = keyData.ownerTwitter || (keyData.userId ? `user:${keyData.userId.slice(0,8)}` : 'unknown');
+        const message = `🧪 *Testing Request*\n\nFrom: *${fromName}* (${fromOwner})\n\n📋 *What to test:* ${what_to_test}\n🔗 *Link:* ${link}\n✅ *Expected:* ${expected_behavior}\n\n_Reply with your findings._\n\n\`ID: ${reqId}\``;
         const sent = await sendTelegram(env.TELEGRAM_BOT_TOKEN, targetChat, message);
         if (!sent) return json({ error: 'Failed to reach human' }, 500);
 

@@ -74,6 +74,17 @@ Ask a human to verify expected vs actual results.
 }
 ```
 
+### POST /v1/test
+Request human testing of a feature/flow (MCP-compatible format).
+
+```json
+{
+  "what_to_test": "User signup flow",
+  "link": "https://staging.app.com/signup",
+  "expected_behavior": "User can enter email, get verification code, complete signup"
+}
+```
+
 ### GET /v1/status/:id
 Check if human has responded.
 

@@ -119,9 +119,25 @@ Response (completed):
 - `400`: Missing required field
 - `404`: Request not found
 
+## POST /v1/test - Request Human Testing
+
+For UI/flow testing (MCP-compatible format):
+
+```bash
+curl -X POST https://humanskill.sh/v1/test \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "what_to_test": "User signup flow",
+    "link": "https://staging.app.com/signup",
+    "expected_behavior": "User can enter email, get verification code, complete signup"
+  }'
+```
+
 ## When to Use
 
 - You are uncertain about a decision
 - You need to verify your output matches expectations  
 - You are blocked on something requiring human judgment
 - You want approval before a destructive action
+- You built something and need a human to test it
