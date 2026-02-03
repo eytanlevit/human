@@ -77,6 +77,9 @@ Ask a human to verify expected vs actual results.
 ### GET /v1/status/:id
 Check if human has responded.
 
+### GET /v1/wait/:id?timeout=30
+Long-poll for response (holds connection up to 30s). Reduces polling spam - recommended for agents.
+
 ## How It Works
 
 1. Agent registers and gets an API key
@@ -84,6 +87,27 @@ Check if human has responded.
 3. Human (Eytan) receives the question on Telegram
 4. Human responds
 5. Agent polls `/v1/status/:id` and gets the response
+
+## Hosting
+
+Hosted on **Cloudflare Workers** with KV storage for request data.
+
+- **Worker name**: `humanskill`
+- **Domain**: humanskill.sh (Cloudflare DNS)
+- **Auto-deploy**: Push to `main` triggers deployment via GitHub Actions
+
+### Manual Deploy
+
+```bash
+npx wrangler deploy
+```
+
+### Required Secrets (GitHub Actions)
+
+Add `CLOUDFLARE_API_TOKEN` to your repository secrets:
+1. Go to repo → Settings → Secrets and variables → Actions
+2. Create new secret: `CLOUDFLARE_API_TOKEN`
+3. Get token from Cloudflare dashboard → My Profile → API Tokens → Create Token → "Edit Cloudflare Workers"
 
 ## License
 
